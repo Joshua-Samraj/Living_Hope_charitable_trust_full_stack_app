@@ -47,8 +47,8 @@ export const volunteerService = {
         }
       };
       
-      const response = await api.get('/volunteers', config);
-      // const response = await api.get('/volunteers');
+      // const response = await api.get('/volunteers', config);
+      const response = await api.get('/volunteers');
       return response.data;
     } catch (error) {
       console.error('Error fetching volunteers:', error);
@@ -72,7 +72,8 @@ export const volunteerService = {
         }
       };
       
-      const response = await api.get('/volunteers/stats', config);
+      // const response = await api.get('/volunteers/stats', config);
+      const response = await api.get('/volunteers/stats');
       return response.data;
     } catch (error) {
       console.error('Error fetching volunteer stats:', error);

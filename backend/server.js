@@ -16,10 +16,32 @@ const galleryRoutes = require('./routes/galleryRoutes');
 const app = express();
 
 // Middleware
-
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
+// Configure CORS for both development and production
+const allowedOrigins = [
+  process.env.FRONTEND_PROD_URL || 'https://living-hope-charitable-trust-full-s.vercel.app',
+  'https://living-hope-charitable-trust.vercel.app',
+  process.env.FRONTEND_DEV_URL || 'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Serve static files from the 'image/projects/gallery' directory
 app.use('/image/projects/gallery', express.static('image/projects/gallery'));
@@ -34,6 +56,7 @@ const AdminUser = require('./models/AdminUser');
 const adminRoutes = require('./routes/adminRoutes')(AdminUser);
 const donationRoutes = require('./routes/donationRoutes');
 const volunteerRoutes = require('./routes/volunteerRoutes');
+
 // Express.js route handler
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -75,6 +98,7 @@ app.put('/gallery/:id', upload.single('image'), async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 // Use Routes
 app.use('/api/projects', projectRoutes);
 app.use('/api/categories', categoryRoutes);
@@ -101,12 +125,7 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);
-app.use(cors({
-  origin: ['https://living-hope-charitable-trust-full-s.vercel.app','http://localhost:5173'], // Replace with actual Vercel URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // Optional if using cookies or auth headers
-  // hello  
-}));
+
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

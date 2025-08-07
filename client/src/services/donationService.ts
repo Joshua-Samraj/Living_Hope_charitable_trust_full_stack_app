@@ -27,7 +27,8 @@ const donationService = {
         }
       };
       
-      const response = await api.get('/donations', config);
+      // const response = await api.get('/donations', config);
+      const response = await api.get('/donations');
       return response.data;
     } catch (error) {
       console.error('Error fetching donations:', error);
@@ -36,5 +37,5 @@ const donationService = {
   },
 };
 
-export { donationService, Donation };
+export { donationService};
 
