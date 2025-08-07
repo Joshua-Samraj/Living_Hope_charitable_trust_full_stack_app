@@ -20,7 +20,7 @@ app.use(cors({
   origin: ['https://living-hope-charitable-trust-full-s.vercel.app','http://localhost:5173'], // Replace with actual Vercel URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true // Optional if using cookies or auth headers
-  // hello
+  // hello  
 }));
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));

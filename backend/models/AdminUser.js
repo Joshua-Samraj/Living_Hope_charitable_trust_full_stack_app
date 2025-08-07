@@ -1,7 +1,7 @@
 console.log('AdminUser.js is being loaded!');
 const mongoose = require('mongoose');
 
-
+// Define schema
 const adminUserSchema = mongoose.Schema(
   {
     username: {
@@ -9,6 +9,7 @@ const adminUserSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    // Still keep password field for compatibility (optional)
     password: {
       type: String,
       required: true,
@@ -19,9 +20,9 @@ const adminUserSchema = mongoose.Schema(
   }
 );
 
-// Compare password method
+// Compare with environment variable
 adminUserSchema.methods.matchPassword = async function (enteredPassword) {
-  return enteredPassword === this.password;
+  return enteredPassword === process.env.ADMIN_PASSWORD;
 };
 
 const AdminUser = mongoose.models.AdminUser || mongoose.model('AdminUser', adminUserSchema);
