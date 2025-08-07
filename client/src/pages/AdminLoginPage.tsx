@@ -13,9 +13,10 @@ const AdminLoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/admin/login', { username, password });
+      const res = await axios.post('/admin/login', { username, password });
       localStorage.setItem('admin', JSON.stringify(res.data));
       navigate('/admin/dashboard'); // Redirect to admin dashboard after successful login
+      setError('credentials ok');
     } catch (err) {
       setError('Invalid credentials');
       console.error(err);
