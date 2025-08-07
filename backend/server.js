@@ -38,7 +38,7 @@ const volunteerRoutes = require('./routes/volunteerRoutes');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-router.put('/gallery/:id', upload.single('image'), async (req, res) => {
+app.put('/gallery/:id', upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
     const { title, category, description } = req.body;
