@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // Use environment variables for API URL configuration
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = 'https://living-hope-charitable-trust-full-stack.onrender.com/api';
+// const API_URL = 'http://localhost:5000/api';
 
 // Log the API URL in non-production environments for debugging
 if (import.meta.env.DEV) {
