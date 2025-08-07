@@ -5,7 +5,7 @@ module.exports = (AdminUser) => {
   const router = express.Router();
 
   // Admin Login Route
-  router.post('/login', express.json(), async (req, res) => {
+  router.post('https://living-hope-charitable-trust-full-stack.onrender.com/api/login', express.json(), async (req, res) => {
     const { username, password } = req.body;
 
     try {
@@ -31,7 +31,7 @@ module.exports = (AdminUser) => {
   });
 
   // Admin Profile Route
-  router.get('/profile', async (req, res) => {
+  router.get('https://living-hope-charitable-trust-full-stack.onrender.com/api/profile', async (req, res) => {
     try {
       if (!req.admin) {
         return res.status(401).json({ message: 'Not authorized, admin not found' });
