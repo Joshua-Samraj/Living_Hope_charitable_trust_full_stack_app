@@ -23,12 +23,7 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 // Serve static files from the 'image/projects/gallery' directory
 app.use('/image/projects/gallery', express.static('image/projects/gallery'));
-app.use(cors({
-  origin: ['https://living-hope-charitable-trust-full-s.vercel.app','http://localhost:5173'], // Replace with actual Vercel URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // Optional if using cookies or auth headers
-  // hello
-}));
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
@@ -42,7 +37,12 @@ const volunteerRoutes = require('./routes/volunteerRoutes');
 // Express.js route handler
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
-
+app.use(cors({
+  origin: ['https://living-hope-charitable-trust-full-s.vercel.app','http://localhost:5173'], // Replace with actual Vercel URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // Optional if using cookies or auth headers
+  // hello
+}));
 app.put('/gallery/:id', upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
