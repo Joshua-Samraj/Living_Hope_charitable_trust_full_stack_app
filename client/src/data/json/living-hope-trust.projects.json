@@ -1,0 +1,624 @@
+[{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca53"
+  },
+  "id": "1",
+  "title": "Fight Against Hunger - 1",
+  "category": "hunger",
+  "description": "Providing nutritious meals to underprivileged families and children.",
+  "fullDescription": "எனது நீண்ட நாள் ஆசை ஆதரவற்ற மக்களுக்கு  முதல் தரமான  வீட்டு சாப்பாடுகளை நாமே சமைத்து அவர்களுக்கு கொடுக்க வேண்டும் என்பது.    தேவனுடைய பெரிதான கிருபையால் 19-08-2022  அன்று  மீன் சாப்பாடு ,மீன் பொரியல் ,  சௌசௌ கூட்டு என உள்ளடக்கிய உணவுகளை  126 பசியுள்ள மக்களுக்கு இந்த உணவுகளை வழங்க தேவன் உதவி செய்தார். இதை ஒரு திட்டமாக நாங்கள் உருவாக்கியுள்ளோம்  இத்திட்டத்தின் பெயர்  (FIGHT AGAINST HUNGER)  இந்த திட்டத்தின் மூலம் பசியில்லா தமிழகத்தை உருவாக்குவதே எங்கள் நோக்கம். இதன் மூலம்  மாதம் இம்மாதிரியாக உணவுகளை  நமது  LIVING HOPE TRUST  மூலமாக சமைத்து நேரிடையாக அவர்களுக்கு சூடாக பரிமாற திட்டமிட்டுள்ளோம்.",
+  "image": "/backend/image/projects/FAH-1.jpg",
+  "status": "completed",
+  "beneficiaries": "126",
+  "location": "Government Hospital",
+  "date": "(19-08-2022)",
+  "link": "https://youtu.be/cI-GAwU2Rcs?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca54"
+  },
+  "id": "2",
+  "title": "Fight Against Hunger - 2",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/FAH-2.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/gim-Yv3ENhk?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca55"
+  },
+  "id": "3",
+  "title": "Fight Against Hunger - 3",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/fah-3.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/W-iLxT22MbY?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca56"
+  },
+  "id": "4",
+  "title": "Fight Against Hunger - 4",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-4.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/ndGGJTx80Qw?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca57"
+  },
+  "id": "5",
+  "title": "Fight Against Hunger - 5",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-5.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/ZghCKkq9DZo?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca58"
+  },
+  "id": "6",
+  "title": "Fight Against Hunger - 6",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-6.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/VFXZE_Oj2XY?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca59"
+  },
+  "id": "7",
+  "title": "Fight Against Hunger - 7",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-7.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/VFXZE_Oj2XY?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca5a"
+  },
+  "id": "8",
+  "title": "Fight Against Hunger - 8",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-8.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/fbemB3Jao0s?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca5b"
+  },
+  "id": "9",
+  "title": "Fight Against Hunger - 9",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-9.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/nzMXSV9JQeg?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca5c"
+  },
+  "id": "10",
+  "title": "Fight Against Hunger - 11",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-11.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/ZU3V9g_-Rb8?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca5d"
+  },
+  "id": "11",
+  "title": "Fight Against Hunger - 12",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-12.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/1uojYz9F-1E?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca5e"
+  },
+  "id": "12",
+  "title": "கொண்டுவந்ததில்லை கொண்டும்போவதில்லை சேர்த்து வைப்பதில் பயனில்லை",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/FAH-13.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/Cu6MoRvTQl4?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca5f"
+  },
+  "id": "13",
+  "title": "மக்களுக்கு மாலை நேர சிற்றுண்டியாக கொண்டக்கடலை",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/PAYIRU.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/fvyNI4EX8Yo?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca60"
+  },
+  "id": "14",
+  "title": "பேட்டை சத்யாகாலனியில் நமதுதொண்டுப்பணிகள்",
+  "category": "hunger",
+  "description": "Providing nutritious meals...",
+  "fullDescription": "At Living Hope Trust...",
+  "image": "/backend/image/projects/thumbline/BRITHDAY.jpg",
+  "status": "completed",
+  "beneficiaries": "2500",
+  "location": "Multiple Villages",
+  "date": "2020-2024",
+  "link": "https://youtu.be/yNWunjA6lCM?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca61"
+  },
+  "id": "15",
+  "title": "Fight Against Cancer-1",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "Our Fight Against Cancer program...",
+  "image": "/backend/image/projects/cancer_image/1.jpg",
+  "status": "active",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=6SeoEtT93MM"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca62"
+  },
+  "id": "16",
+  "title": "Fight Against Cancer-2",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "Our Fight Against Cancer program...",
+  "image": "/backend/image/projects/cancer_image/2.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtu.be/tvdGQrJGvVQ?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca63"
+  },
+  "id": "17",
+  "title": "நெல்லை மக்களுக்கு ஒரு அரிதான வாய்ப்பு!",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "நமது லிவிங் ஹோப் ட்ரஸ்ட்...",
+  "image": "/backend/image/projects/cancer_image/awareness.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=Ru0y0_ndaB4"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca64"
+  },
+  "id": "18",
+  "title": "மகளிர் தின முக்கிய செய்தி",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "நமது லிவிங் ஹோப் ட்ரஸ்ட்...",
+  "image": "/backend/image/projects/cancer_image/awareness_2.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=Ru0y0_ndaB4"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca65"
+  },
+  "id": "19",
+  "title": "Day 1 - இலவச மருத்துவ முகாம்",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "நமது லிவிங் ஹோப் ட்ரஸ்ட்...",
+  "image": "/backend/image/projects/cancer_image/Cancer_1_p_1.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=nuqRWIfp1Dg"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca66"
+  },
+  "id": "20",
+  "title": "Day 2 - சிவந்திப்பட்டி கிராமம்",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "நமது லிவிங் ஹோப் ட்ரஸ்ட்...",
+  "image": "/backend/image/projects/cancer_image/Cancer_1_p_2.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=nuqRWIfp1Dg"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca67"
+  },
+  "id": "21",
+  "title": "Day 3 - பருத்திப்பாடு கிராமம்",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "📢 நெல்லை மக்களுக்கு ஒரு அரிதான வாய்ப்பு!!...",
+  "image": "/backend/image/projects/cancer_image/Cancer_1_p_3.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=nuqRWIfp1Dg"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca68"
+  },
+  "id": "22",
+  "title": "Day 4 - புற்று நோய்க்கு எதிரான போராட்டம்",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "📢 நெல்லை மக்களுக்கு ஒரு அரிதான வாய்ப்பு!!...",
+  "image": "/backend/image/projects/cancer_image/Cancer_1_p_4.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtu.be/29zPPYzKX_M?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca69"
+  },
+  "id": "23",
+  "title": "Living Hope Trust ன் பாராட்டுகள்",
+  "category": "cancer",
+  "description": "Supporting cancer patients...",
+  "fullDescription": "📢 மாபெரும் புற்றுநோய் வரும்முன்...",
+  "image": "/backend/image/projects/cancer_image/Cancer_1_p_5.jpg",
+  "status": "completed",
+  "beneficiaries": "150",
+  "location": "Regional Hospitals",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=b4vpLSgXeUo"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca6a"
+  },
+  "id": "24",
+  "title": "Flood Rescue Operation - 1",
+  "category": "disaster",
+  "description": "Emergency relief and rehabilitation...",
+  "fullDescription": "Our Disaster Relief Operations...",
+  "image": "/backend/image/projects/flood/1.jpg",
+  "status": "completed",
+  "beneficiaries": "1200",
+  "location": "Disaster-Affected Areas",
+  "date": "2020-2024",
+  "link": "https://youtu.be/riUTH3Z2-sY?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca6b"
+  },
+  "id": "24",
+  "title": "Flood Rescue Operation - 2",
+  "category": "disaster",
+  "description": "Emergency relief and rehabilitation...",
+  "fullDescription": "Our Disaster Relief Operations...",
+  "image": "/backend/image/projects/flood/2.jpg",
+  "status": "completed",
+  "beneficiaries": "1200",
+  "location": "Disaster-Affected Areas",
+  "date": "2020-2024",
+  "link": "https://youtu.be/kFCayONr3bU?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca6c"
+  },
+  "id": "24",
+  "title": "Flood Rescue Operation - 3",
+  "category": "disaster",
+  "description": "Emergency relief and rehabilitation...",
+  "fullDescription": "Our Disaster Relief Operations...",
+  "image": "/backend/image/projects/flood/3.jpg",
+  "status": "completed",
+  "beneficiaries": "1200",
+  "location": "Disaster-Affected Areas",
+  "date": "2020-2024",
+  "link": "https://youtu.be/s0RNabwJqbI?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca6d"
+  },
+  "id": "24",
+  "title": "Flood Rescue Operation - 4",
+  "category": "disaster",
+  "description": "Emergency relief and rehabilitation...",
+  "fullDescription": "Our Disaster Relief Operations...",
+  "image": "/backend/image/projects/flood/4.jpg",
+  "status": "completed",
+  "beneficiaries": "1200",
+  "location": "Disaster-Affected Areas",
+  "date": "2020-2024",
+  "link": "https://youtu.be/1PeGDdXdopM?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca6e"
+  },
+  "id": "24",
+  "title": "Flood Rescue Operation - 5",
+  "category": "disaster",
+  "description": "Emergency relief and rehabilitation...",
+  "fullDescription": "Our Disaster Relief Operations...",
+  "image": "/backend/image/projects/flood/5.jpg",
+  "status": "completed",
+  "beneficiaries": "1200",
+  "location": "Disaster-Affected Areas",
+  "date": "2020-2024",
+  "link": "https://youtube.com/watch?v=e64Xh-RQ-jk"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca6f"
+  },
+  "id": "24",
+  "title": "Flood Rescue Operation - 6",
+  "category": "disaster",
+  "description": "Emergency relief and rehabilitation...",
+  "fullDescription": "Our Disaster Relief Operations...",
+  "image": "/backend/image/projects/flood/6.jpg",
+  "status": "completed",
+  "beneficiaries": "1200",
+  "location": "Disaster-Affected Areas",
+  "date": "2020-2024",
+  "link": "https://youtu.be/elwFo8i6cRA?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca70"
+  },
+  "id": "25",
+  "title": "Old Age Pension Scheme",
+  "category": "elderly",
+  "description": "Monthly support and care for elderly...",
+  "fullDescription": "Our Old Age Pension Scheme...",
+  "image": "/backend/image/projects/old_age/1.jpg",
+  "status": "active",
+  "beneficiaries": "3",
+  "location": "Senior Care Centers",
+  "date": "2021-2024",
+  "link": "https://youtube.com/watch?v=gYMx_Rgbeuc"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca71"
+  },
+  "id": "26",
+  "title": "Future Sparks - Education Initiative",
+  "category": "education",
+  "description": "Providing quality education...",
+  "fullDescription": "Future Sparks is our flagship education...",
+  "image": "/backend/image/projects/Banner/future.png",
+  "status": "active",
+  "beneficiaries": "800",
+  "location": "Rural Schools",
+  "date": "2020-2024",
+  "link": "https://living-hope-charitable-education-website-liart.vercel.app"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca72"
+  },
+  "id": "27",
+  "title": "Real Christmas - 1",
+  "category": "holiday",
+  "description": "Spreading joy during Christmas...",
+  "fullDescription": "Real Christmas is our annual holiday program...",
+  "image": "/backend/image/projects/Banner/christmas.jpg",
+  "status": "completed",
+  "beneficiaries": "1500",
+  "location": "Melapalayam",
+  "date": "December 2023",
+  "link": "https://youtube.com/watch?v=XON8YadWcNs"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca73"
+  },
+  "id": "27",
+  "title": "Real Christmas - 2",
+  "category": "holiday",
+  "description": "Spreading joy during Christmas...",
+  "fullDescription": "Real Christmas is our annual holiday program...",
+  "image": "/backend/image/projects/Christmas/1.jpg",
+  "status": "completed",
+  "beneficiaries": "1500",
+  "location": "Melapalayam",
+  "date": "December 2023",
+  "link": "https://youtu.be/Gg_n8C57bJE?feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca74"
+  },
+  "id": "27",
+  "title": "இந்த Joykitல அப்படி என்னதான் இருக்கு?",
+  "category": "holiday",
+  "description": "Spreading joy during Christmas...",
+  "fullDescription": "Real Christmas is our annual holiday program...",
+  "image": "/backend/image/projects/Christmas/2.jpg",
+  "status": "completed",
+  "beneficiaries": "1500",
+  "location": "Melapalayam",
+  "date": "December 2023",
+  "link": "https://youtube.com/watch?v=OF1CkhAUA08"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca75"
+  },
+  "id": "27",
+  "title": "நமது LivinghopeTrustன் உண்மையான கிறிஸ்துமஸ்",
+  "category": "holiday",
+  "description": "Spreading joy during Christmas...",
+  "fullDescription": "Real Christmas is our annual holiday program...",
+  "image": "/backend/image/projects/Christmas/3.jpg",
+  "status": "completed",
+  "beneficiaries": "1500",
+  "location": "Melapalayam",
+  "date": "December 2023",
+  "link": "https://youtube.com/watch?v=xLC8UGn5h54"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca76"
+  },
+  "id": "28",
+  "title": "Health Awareness Program",
+  "category": "awareness",
+  "description": "Community health education...",
+  "fullDescription": "Our Health Awareness Program conducts...",
+  "image": "https://images.pexels.com/photos/8376302/pexels-photo-8376302.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "status": "active",
+  "beneficiaries": "3000",
+  "location": "Rural Communities",
+  "date": "2020-2024",
+  "link": "https://youtube.com/playlist?list=PL3NkSvlzNuULDHwKHhABadQgVyT8YfoZM&feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca77"
+  },
+  "id": "29",
+  "title": "Youth Leadership Summit",
+  "category": "Community",
+  "description": "Empowering young leaders...",
+  "fullDescription": "",
+  "image": "https://images.pexels.com/photos/7414032/pexels-photo-7414032.jpeg?auto=compress&cs=tinysrgb&w=800",
+  "status": "completed",
+  "beneficiaries": "200",
+  "location": "Rose Mary College Of Arts & Science",
+  "date": "March 2024",
+  "link": "https://youtube.com/playlist?list=PL3NkSvlzNuULDHwKHhABadQgVyT8YfoZM&feature=shared"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca78"
+  },
+  "id": "30",
+  "title": "Cancer Medical Camp",
+  "category": "upcoming",
+  "description": "Join us for a free Cancer Medical Check-up Camp, providing essential screenings worth ₹5,000 per person at no cost. Early detection saves lives, and this initiative aims to offer high-quality diagnostic services to 200+ beneficiaries, especially underprivileged communities who lack access to proper healthcare.",
+  "fullDescription": "Join us for a free Cancer Medical Check-up Camp, providing essential screenings worth ₹5,000 per person at no cost. Early detection saves lives, and this initiative aims to offer high-quality diagnostic services to 200+ beneficiaries, especially underprivileged communities who lack access to proper healthcare.\n\nKey Highlights:\n✅ Free cancer screenings (including consultations & basic tests)\n✅ Expert medical team conducting evaluations\n✅ Awareness sessions on prevention & early detection\n✅ Open to all—prioritizing low-income families\n\nThis camp is part of our ongoing mission to make healthcare accessible and fight cancer through early intervention. Your participation could help save a life!",
+  "image": "/backend/image/projects/upcoming/TENKASI.jpg",
+  "status": "upcoming",
+  "beneficiaries": "Rigistration Joing on",
+  "location": "Tenkasi",
+  "date": "\"Not scheduled\"",
+  "link": "#"
+},
+{
+  "_id": {
+    "$oid": "6891b541d6beaa46d5ccca79"
+  },
+  "id": "31",
+  "title": "Cancer Medical Camp",
+  "category": "upcoming",
+  "description": "Join us for a free Cancer Medical Check-up Camp, providing essential screenings worth ₹5,000 per person at no cost. Early detection saves lives, and this initiative aims to offer high-quality diagnostic services to 200+ beneficiaries, especially underprivileged communities who lack access to proper healthcare.",
+  "fullDescription": "Join us for a free Cancer Medical Check-up Camp, providing essential screenings worth ₹5,000 per person at no cost. Early detection saves lives, and this initiative aims to offer high-quality diagnostic services to 200+ beneficiaries, especially underprivileged communities who lack access to proper healthcare.\n\nKey Highlights:\n✅ Free cancer screenings (including consultations & basic tests)\n✅ Expert medical team conducting evaluations\n✅ Awareness sessions on prevention & early detection\n✅ Open to all—prioritizing low-income families\n\nThis camp is part of our ongoing mission to make healthcare accessible and fight cancer through early intervention. Your participation could help save a life!",
+  "image": "/backend/image/projects/upcoming/Kodaikanal.jpg",
+  "status": "upcoming",
+  "beneficiaries": "400",
+  "location": "Kodaikanal",
+  "date": "August 21–24, 2024",
+  "link": "#"
+}]
