@@ -27,6 +27,7 @@ app.use(cors({
   origin: 'https://living-hope-charitable-trust-full-s.vercel.app', // Replace with actual Vercel URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true // Optional if using cookies or auth headers
+  // hello
 }));
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
