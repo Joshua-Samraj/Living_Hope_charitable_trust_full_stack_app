@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 // Serve static files from the 'image/projects/gallery' directory
 app.use('/image/projects/gallery', express.static('image/projects/gallery'));
 app.use(cors({
-  origin: 'https://living-hope-charitable-trust-full-s.vercel.app', // Replace with actual Vercel URL
+  origin: ['https://living-hope-charitable-trust-full-s.vercel.app','http://localhost:5173'], // Replace with actual Vercel URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true // Optional if using cookies or auth headers
   // hello

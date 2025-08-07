@@ -30,7 +30,7 @@ router.post('/login', express.json(), async (req, res) => {
 
 
 // Admin Profile (Protected Route)
-router.get('/profile', protect, async (req, res) => {
+router.get('/profile', async (req, res) => {
   // In a basic auth setup, req.admin would be set by a preceding middleware
   // that authenticates the user (e.g., from session or basic auth headers).
   // For this simplified example, we assume req.admin is populated if authentication succeeds.
