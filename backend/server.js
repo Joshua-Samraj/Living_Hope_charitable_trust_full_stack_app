@@ -23,10 +23,6 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 // Serve static files from the 'image/projects/gallery' directory
 app.use('/image/projects/gallery', express.static('image/projects/gallery'));
-app.use(express.static(path.join(__dirname, '../client/dist'))); // or '../client/build'
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
@@ -42,7 +38,7 @@ const volunteerRoutes = require('./routes/volunteerRoutes');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-app.put('/gallery/:id', upload.single('image'), async (req, res) => {
+router.put('/gallery/:id', upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
     const { title, category, description } = req.body;
@@ -107,7 +103,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
