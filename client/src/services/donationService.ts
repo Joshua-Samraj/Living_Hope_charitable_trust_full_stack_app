@@ -1,6 +1,6 @@
 import api from './api';
 
-export interface Donation {
+interface Donation {
   _id: string;
   name: string;
   phone: string;
@@ -14,7 +14,20 @@ export interface Donation {
 const donationService = {
   getAllDonations: async (): Promise<Donation[]> => {
     try {
-      const response = await api.get('/donations');
+      const adminData = localStorage.getItem('admin');
+      if (!adminData) {
+        throw new Error('Authentication required');
+      }
+      const admin = JSON.parse(adminData);
+      const token = btoa(JSON.stringify({ id: admin.id }));
+      
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+      
+      const response = await api.get('/donations', config);
       return response.data;
     } catch (error) {
       console.error('Error fetching donations:', error);
@@ -23,4 +36,5 @@ const donationService = {
   },
 };
 
-export { donationService };
+export { donationService, Donation };
+

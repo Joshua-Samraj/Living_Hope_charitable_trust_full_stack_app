@@ -13,8 +13,10 @@ export interface Volunteer {
   updatedAt?: string;
 }
 
+
+
 export const volunteerService = {
-  // Submit volunteer application (open/public)
+  // Submit volunteer application
   submitApplication: async (volunteerData: Omit<Volunteer, '_id'>): Promise<Volunteer> => {
     try {
       const response = await api.post('/volunteers', volunteerData);
@@ -25,10 +27,28 @@ export const volunteerService = {
     }
   },
 
-  // Get all volunteers (no auth required)
+  // Get all volunteers (admin only)
   getAllVolunteers: async (): Promise<Volunteer[]> => {
     try {
-      const response = await api.get('/volunteers');
+      // Get admin data from localStorage for authentication
+      const adminData = localStorage.getItem('admin');
+      if (!adminData) {
+        throw new Error('Authentication required');
+      }
+      console.log("Login", adminData)
+      
+      // Parse admin data and create authorization header
+      const admin = JSON.parse(adminData);
+      const token = btoa(JSON.stringify({ id: admin.id }));
+      
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+      
+      const response = await api.get('/volunteers', config);
+      // const response = await api.get('/volunteers');
       return response.data;
     } catch (error) {
       console.error('Error fetching volunteers:', error);
@@ -36,10 +56,23 @@ export const volunteerService = {
     }
   },
 
-  // Get volunteer statistics (no auth required)
+  // Get volunteer statistics (admin only)
   getVolunteerStats: async (): Promise<any> => {
     try {
-      const response = await api.get('/volunteers/stats');
+      const adminData = localStorage.getItem('admin');
+      if (!adminData) {
+        throw new Error('Authentication required');
+      }
+      const admin = JSON.parse(adminData);
+      const token = btoa(JSON.stringify({ id: admin.id }));
+      
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+      
+      const response = await api.get('/volunteers/stats', config);
       return response.data;
     } catch (error) {
       console.error('Error fetching volunteer stats:', error);
@@ -47,14 +80,9 @@ export const volunteerService = {
     }
   },
 
-  // Delete a volunteer (no auth required - risky!)
   deleteVolunteer: async (id: string) => {
-    try {
-      const response = await api.delete(`/volunteers/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error deleting volunteer:', error);
-      throw error;
-    }
-  },
+  const response = await api.delete(`/volunteers/${id}`);
+  return response.data;
+},
 };
+
