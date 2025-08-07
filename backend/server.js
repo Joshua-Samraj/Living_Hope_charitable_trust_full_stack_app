@@ -7,12 +7,7 @@ const cors = require('cors');
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
 const notFound = require('./middleware/notFound');
-app.use(cors({
-  origin: 'https://living-hope-charitable-trust-full-s.vercel.app', // Replace with actual Vercel URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 
-  credentials: false // Optional if using cookies or auth headers
-}));
 // Import routes
 const projectRoutes = require('./routes/projectRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
@@ -28,7 +23,11 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 // Serve static files from the 'image/projects/gallery' directory
 app.use('/image/projects/gallery', express.static('image/projects/gallery'));
-
+app.use(cors({
+  origin: 'https://living-hope-charitable-trust-full-s.vercel.app', // Replace with actual Vercel URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // Optional if using cookies or auth headers
+}));
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
