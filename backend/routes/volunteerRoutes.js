@@ -12,10 +12,11 @@ const {
 router.post('/', express.json(), createVolunteer);
 
 // Get all volunteers (Admin only)
-router.get('/',  getVolunteers);
+router.get('/', protect, getVolunteers);
 
 // Get volunteer statistics (Admin only)
 router.get('/stats', protect, getVolunteerStats);
-router.delete('/:id', deleteVolunteer);
+// Delete a volunteer (Admin only)
+router.delete('/:id', protect, deleteVolunteer);
 
 module.exports = router;

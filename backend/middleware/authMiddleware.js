@@ -1,27 +1,26 @@
 const AdminUser = require('../models/AdminUser');
 
-// Simple middleware to check if user is authenticated
+// Simple middleware to check if user is authenticated using basic auth
 const protect = async (req, res, next) => {
   try {
-    // Check for admin data in headers
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      // Get token from header
-      const token = req.headers.authorization.split(' ')[1];
+    // Check for basic auth header
+    if (req.headers.authorization && req.headers.authorization.startsWith('Basic')) {
+      // Get credentials from header
+      const base64Credentials = req.headers.authorization.split(' ')[1];
+      const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+      const [username, password] = credentials.split(':');
       
-      // For this simple implementation, we'll just check if the admin exists
-      // In a real app, you would verify the token with JWT
-      const adminData = JSON.parse(Buffer.from(token, 'base64').toString());
+      // Find admin by username
+      const admin = await AdminUser.findOne({ username });
       
-      if (adminData && adminData.id) {
-        const admin = await AdminUser.findById(adminData.id);
-        if (admin) {
-          req.admin = admin;
-          return next();
-        }
+      // Check if admin exists and password matches
+      if (admin && await admin.matchPassword(password)) {
+        req.admin = admin;
+        return next();
       }
     }
     
-    // If no token or invalid token
+    // If no auth header or invalid credentials
     res.status(401).json({ message: 'Not authorized, please login' });
   } catch (error) {
     console.error('Auth error:', error);

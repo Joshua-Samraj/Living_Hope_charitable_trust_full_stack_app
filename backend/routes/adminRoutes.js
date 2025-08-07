@@ -4,25 +4,28 @@ const { protect } = require('../middleware/authMiddleware');
 module.exports = (AdminUser) => {
   const router = express.Router();
 
-  // Admin Login Route
-  router.post('https://living-hope-charitable-trust-full-stack.onrender.com/api/login', express.json(), async (req, res) => {
+  // Admin Login Route - Simple username/password check against MongoDB
+  router.post('/login', express.json(), async (req, res) => {
     const { username, password } = req.body;
 
     try {
+      // Find admin by username
       const admin = await AdminUser.findOne({ username });
       if (!admin) {
-        return res.status(400).json({ message: 'Invalid Name' });
+        return res.status(400).json({ message: 'Invalid Username' });
       }
 
+      // Check if password matches
       const isMatch = await admin.matchPassword(password);
       if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid Credentials' });
+        return res.status(400).json({ message: 'Invalid Password' });
       }
 
-      // Generate a fake token here if needed or just send back user info
+      // Return basic admin info on successful login
       res.status(200).json({
         id: admin._id,
-        username: admin.username
+        username: admin.username,
+        message: 'Login successful'
       });
     } catch (err) {
       console.error('Login Error:', err.message);
@@ -30,16 +33,14 @@ module.exports = (AdminUser) => {
     }
   });
 
-  // Admin Profile Route
-  router.get('https://living-hope-charitable-trust-full-stack.onrender.com/api/profile', async (req, res) => {
+  // Admin Profile Route - Protected with basic auth
+  router.get('/profile', protect, async (req, res) => {
     try {
-      if (!req.admin) {
-        return res.status(401).json({ message: 'Not authorized, admin not found' });
-      }
-
+      // req.admin is set by the protect middleware if authentication is successful
       res.status(200).json({
         id: req.admin._id,
-        username: req.admin.username
+        username: req.admin.username,
+        message: 'Profile retrieved successfully'
       });
     } catch (err) {
       console.error('Profile Error:', err.message);
