@@ -16,12 +16,7 @@ const galleryRoutes = require('./routes/galleryRoutes');
 const app = express();
 
 // Middleware
-app.use(cors({
-  origin: ['https://living-hope-charitable-trust-full-s.vercel.app','http://localhost:5173'], // Replace with actual Vercel URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true // Optional if using cookies or auth headers
-  // hello  
-}));
+
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
@@ -106,7 +101,12 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);
-
+app.use(cors({
+  origin: ['https://living-hope-charitable-trust-full-s.vercel.app','http://localhost:5173'], // Replace with actual Vercel URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // Optional if using cookies or auth headers
+  // hello  
+}));
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
