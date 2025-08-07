@@ -19,7 +19,7 @@ const adminUserSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
+// hello
 // Compare with environment variable
 adminUserSchema.methods.matchPassword = async function (enteredPassword) {
   return enteredPassword === process.env.ADMIN_PASSWORD;
