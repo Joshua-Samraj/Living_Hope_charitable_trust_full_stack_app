@@ -10,7 +10,7 @@ const notFound = require('./middleware/notFound');
 app.use(cors({
   origin: 'https://living-hope-charitable-trust-full-s.vercel.app', // Replace with actual Vercel URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  //hello
+
   credentials: false // Optional if using cookies or auth headers
 }));
 // Import routes
