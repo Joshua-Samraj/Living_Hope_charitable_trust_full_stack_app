@@ -11,7 +11,7 @@ module.exports = (AdminUser) => {
     try {
       const admin = await AdminUser.findOne({ username });
       if (!admin) {
-        return res.status(400).json({ message: 'Invalid Credentials' });
+        return res.status(400).json({ message: 'Invalid Name' });
       }
 
       const isMatch = await admin.matchPassword(password);
