@@ -19,7 +19,7 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const adminData = localStorage.getItem('admin');
+        const adminData = true;
         if (!adminData) {
           navigate('/admin/login');
           return;
