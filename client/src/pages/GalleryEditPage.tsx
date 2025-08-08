@@ -22,27 +22,33 @@ const AdminDashboard: React.FC = () => {
     const fetchImages = async () => {
       try {
         // Check if user is authenticated
-        
-        
+
+
         // Get auth config with Basic Authentication headers
         const config = createAuthConfig();
-        
+
         // Fetch gallery images with auth headers
-        const { data } = await axios.get<GalleryImage[]>('/api/gallery', config);
+        const response = await axios.get('/api/gallery', config);
+        const data = response.data;
         console.log('Gallery data:', data);
-        
+        console.log('Gallery data type:', typeof data);
+        console.log('Gallery data is array:', Array.isArray(data));
+
+        let processedImages: GalleryImage[] = [];
+
         // Ensure data is an array before setting it
         if (Array.isArray(data)) {
+          processedImages = data;
           setImages(data);
         } else if (data && typeof data === 'object') {
           // In production, the API might return an object with a data property
           // that contains the actual array of images
           console.warn('Gallery data is not an array, trying to extract array from object:', data);
-          
+
           // Try to find an array property in the response
           const possibleArrayProps = ['data', 'images', 'items', 'results'];
           let foundArray = null;
-          
+
           for (const prop of possibleArrayProps) {
             if (data[prop] && Array.isArray(data[prop])) {
               console.log(`Found array in data.${prop}`);
@@ -50,34 +56,41 @@ const AdminDashboard: React.FC = () => {
               break;
             }
           }
-          
+
           if (foundArray) {
+            processedImages = foundArray;
             setImages(foundArray);
           } else {
             // If we can't find an array, try to convert the object to an array if it has gallery-like properties
             if (data.title && data.category) {
               console.log('Converting single gallery object to array');
+              processedImages = [data];
               setImages([data]);
             } else {
               console.error('Could not extract gallery array from data:', data);
+              processedImages = [];
               setImages([]);
               setError('Invalid data format received from server');
             }
           }
         } else {
           console.error('Gallery data is not an array or object:', data);
+          processedImages = [];
           setImages([]);
           setError('Invalid data format received from server');
         }
-        
-        // Initialize expanded state for all categories
-        const categories = [...new Set(data.map(img => img.category))];
-        const initialExpandedState = categories.reduce((acc, category) => {
-          acc[category] = false; // Set to false if you want categories collapsed by default
-          return acc;
-        }, {} as Record<string, boolean>);
-        
-        setExpandedCategories(initialExpandedState);
+
+        // Initialize expanded state for all categories using processedImages instead of data
+        if (processedImages.length > 0) {
+          const categories = [...new Set(processedImages.map(img => img.category))];
+          const initialExpandedState = categories.reduce((acc, category) => {
+            acc[category] = false; // Set to false if you want categories collapsed by default
+            return acc;
+          }, {} as Record<string, boolean>);
+
+          setExpandedCategories(initialExpandedState);
+        }
+
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch images or not authorized');
@@ -97,10 +110,10 @@ const AdminDashboard: React.FC = () => {
           navigate('/admin/login');
           return;
         }
-        
+
         // Get auth config with Basic Authentication headers
         const config = createAuthConfig();
-        
+
         // Delete the image with auth headers
         await axios.delete(`/api/gallery/${id}`, config);
         setImages(images.filter((image) => image._id !== id));
@@ -153,7 +166,7 @@ const AdminDashboard: React.FC = () => {
         <div className="space-y-6">
           {categories.map(category => (
             <div key={category} className="border border-gray-200 rounded-lg overflow-hidden">
-              <div 
+              <div
                 className="bg-gray-100 px-4 py-3 cursor-pointer flex justify-between items-center"
                 onClick={() => toggleCategory(category)}
               >
@@ -162,7 +175,7 @@ const AdminDashboard: React.FC = () => {
                   {expandedCategories[category] ? '−' : '+'}
                 </span>
               </div>
-              
+
               {expandedCategories[category] && (
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
@@ -180,9 +193,9 @@ const AdminDashboard: React.FC = () => {
                         .map((image) => (
                           <tr key={image._id} className="border-t border-gray-200 hover:bg-gray-50">
                             <td className="py-3 px-4">
-                              <img 
-                                src={image.url} 
-                                alt={image.title} 
+                              <img
+                                src={image.url}
+                                alt={image.title}
                                 className="w-20 h-20 object-cover rounded"
                               />
                             </td>

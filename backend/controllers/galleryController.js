@@ -26,7 +26,9 @@ const extractBase64Data = (dataUrl) => {
 
 const getAllImages = async (req, res) => {
   try {
+    console.log('Gallery getAllImages called');
     const images = await Gallery.find({});
+    console.log('Found images count:', images.length);
     
     // Transform the response to include URL for base64 images
     const transformedImages = images.map(image => {
@@ -40,8 +42,12 @@ const getAllImages = async (req, res) => {
       return imageObj;
     });
     
+    console.log('Sending transformed images count:', transformedImages.length);
+    console.log('Response is array:', Array.isArray(transformedImages));
+    
     res.json(transformedImages);
   } catch (error) {
+    console.error('Gallery getAllImages error:', error);
     res.status(500).json({ message: error.message });
   }
 };
