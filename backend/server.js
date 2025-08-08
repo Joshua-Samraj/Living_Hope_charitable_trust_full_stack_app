@@ -23,19 +23,30 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 const allowedOrigins = [
   process.env.FRONTEND_PROD_URL || 'https://living-hope-charitable-trust-full-s.vercel.app',
   'https://living-hope-charitable-trust.vercel.app',
+  'https://living-hope-charitable-trust-full-stack-joshua-samrajs-projects.vercel.app', // Add your actual Vercel production URL
   process.env.FRONTEND_DEV_URL || 'http://localhost:5173',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://localhost:5174' // Add additional local development port
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
+    // Log the origin for debugging
+    console.log('Request origin:', origin);
+    console.log('Allowed origins:', allowedOrigins);
+    
     // Allow requests with no origin (like mobile apps, curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('No origin, allowing request');
+      return callback(null, true);
+    }
     
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      console.log('CORS error:', msg, 'Origin:', origin);
       return callback(new Error(msg), false);
     }
+    console.log('Origin allowed:', origin);
     return callback(null, true);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
