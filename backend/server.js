@@ -21,10 +21,10 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 // Configure CORS for both development and production
 const allowedOrigins = [
-  process.env.FRONTEND_PROD_URL || 'https://living-hope-charitable-trust-full-s.vercel.app',
+  'https://living-hope-charitable-trust-full-s.vercel.app',
   'https://living-hope-charitable-trust.vercel.app',
   'https://living-hope-charitable-trust-full-stack-joshua-samrajs-projects.vercel.app', // Add your actual Vercel production URL
-  process.env.FRONTEND_DEV_URL || 'http://localhost:5173',
+  'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:5174' // Add additional local development port
 ];
