@@ -40,7 +40,7 @@ const About = () => {
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-blue-50 to-green-50 overflow-hidden">
         <Globe />
-        
+
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ y: 50, opacity: 0 }}
@@ -50,8 +50,8 @@ const About = () => {
           >
             <h1 className="text-5xl font-bold text-gray-800 mb-6">About Us</h1>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-              Living Hope Charitable Trust was founded in 2020 by Jose Sam with a vision to create 
-              meaningful change in rural communities through education, humanitarian aid, and 
+              Living Hope Charitable Trust was founded in 2021 by Jose Sam with a vision to create
+              meaningful change in rural communities through education, humanitarian aid, and
               sustainable development programs.
             </p>
           </motion.div>
@@ -72,12 +72,12 @@ const About = () => {
               </div>
               <h3 className="text-3xl font-bold text-gray-800 mb-4">Our Mission</h3>
               <p className="text-gray-600 leading-relaxed">
-                To empower underprivileged communities through education, healthcare, and 
-                sustainable development programs while fostering hope, dignity, and self-reliance 
+                To empower underprivileged communities through education, healthcare, and
+                sustainable development programs while fostering hope, dignity, and self-reliance
                 among those we serve.
               </p>
             </motion.div>
-            
+
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
@@ -90,8 +90,8 @@ const About = () => {
               </div>
               <h3 className="text-3xl font-bold text-gray-800 mb-4">Our Vision</h3>
               <p className="text-gray-600 leading-relaxed">
-                To create a world where every individual has access to basic necessities, 
-                quality education, and opportunities for growth, building stronger, more 
+                To create a world where every individual has access to basic necessities,
+                quality education, and opportunities for growth, building stronger, more
                 resilient communities for future generations.
               </p>
             </motion.div>
@@ -112,21 +112,21 @@ const About = () => {
             >
               <h2 className="text-4xl font-bold text-gray-800 mb-6">Our Story</h2>
               <p className="text-lg text-gray-600 mb-6">
-                What started as a small initiative to help underprivileged children access education 
-                has grown into a comprehensive charitable organization touching thousands of lives 
+                What started as a small initiative to help underprivileged children access education
+                has grown into a comprehensive charitable organization touching thousands of lives
                 across multiple communities.
               </p>
               <p className="text-lg text-gray-600 mb-6">
-                Under the leadership of Jose Sam, our trust has expanded its reach to include 
-                healthcare initiatives, disaster relief, elderly care, and various awareness programs 
+                Under the leadership of Jose Sam, our trust has expanded its reach to include
+                healthcare initiatives, disaster relief, elderly care, and various awareness programs
                 that address the most pressing needs of our society.
               </p>
               <p className="text-lg text-gray-600">
-                Today, we continue to grow and adapt, always staying true to our core mission of 
+                Today, we continue to grow and adapt, always staying true to our core mission of
                 empowering lives and uplifting communities through sustainable, impactful programs.
               </p>
             </motion.div>
-            
+
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
@@ -143,19 +143,19 @@ const About = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                
+
                 {/* Decorative elements */}
                 {/* <div className="absolute -bottom-4 -right-4 w-24 h-24 border-4 border-red-500 rounded-lg z-0"></div>
                 <div className="absolute -top-4 -left-4 w-16 h-16 border-4 border-green-500 rounded-lg z-0"></div> */}
               </div>
-              
+
               {/* Content overlay */}
               <div className="relative z-20 bg-white p-6 rounded-xl shadow-lg -mt-12 mx-8">
                 <h3 className="text-2xl font-bold text-gray-800 mb-2">Jose Sam</h3>
                 <p className="text-blue-600 font-semibold mb-4">Founder & Chairman</p>
                 <p className="text-gray-600">
-                  "Our mission is not just to provide aid, but to empower communities to build 
-                  their own sustainable futures. Every life we touch becomes a beacon of hope 
+                  "Our mission is not just to provide aid, but to empower communities to build
+                  their own sustainable futures. Every life we touch becomes a beacon of hope
                   for others."
                 </p>
               </div>
@@ -194,7 +194,7 @@ const About = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                
+
                 {/* Decorative shapes */}
                 <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-blue-100 rounded-lg z-0"></div>
                 <div className="absolute -top-6 -left-6 w-20 h-20 bg-green-100 rounded-full z-0"></div>
@@ -211,33 +211,33 @@ const About = () => {
                 <p className="text-gray-600">
                   "Serving with compassion and dedication to ensure the smooth execution of every initiative that brings hope and transformation."
                 </p>
-                
+
                 {/* Social links (optional) */}
-                
+
               </div>
             </motion.div>
           </div>
         </div>
       </section>
       {/* Volunteers Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mt-16"
-        >
-          <p className="text-lg text-gray-600 mb-6">Want to join our volunteer team?</p>
-          <Link to="/volunteer">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-colors duration-300">
-              Become a Volunteer
-            </button>
-          </Link>
-        </motion.div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.6 }}
+        viewport={{ once: true }}
+        className="text-center mt-16"
+      >
+        <p className="text-lg text-gray-600 mb-6">Want to join our volunteer team?</p>
+        <Link to="/volunteer">
+          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-colors duration-300">
+            Become a Volunteer
+          </button>
+        </Link>
+      </motion.div>
 
 
 
-      
+
 
       {/* Values */}
       <section className="py-20 bg-white">
@@ -254,7 +254,7 @@ const About = () => {
               These core values guide every decision we make and every program we implement
             </p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <motion.div

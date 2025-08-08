@@ -127,16 +127,30 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
       loading
     };
     
-    setCache(prev => ({
-      ...prev,
-      [key]: cacheData
-    }));
+    setCache(prev => {
+      // Only update if data actually changed
+      if (prev[key] && 
+          prev[key].loading === loading && 
+          JSON.stringify(prev[key].data) === JSON.stringify(data)) {
+        return prev;
+      }
+      
+      return {
+        ...prev,
+        [key]: cacheData
+      };
+    });
     
-    // Save to localStorage if not loading
-    if (!loading && data.length > 0) {
+    // Save to localStorage if not loading and data exists
+    if (!loading && data && data.length > 0) {
       const storageKey = CACHE_KEYS[key as keyof typeof CACHE_KEYS];
       if (storageKey) {
-        saveToLocalStorage(storageKey, cacheData);
+        // Use requestIdleCallback for non-blocking localStorage operations
+        if (window.requestIdleCallback) {
+          window.requestIdleCallback(() => saveToLocalStorage(storageKey, cacheData));
+        } else {
+          setTimeout(() => saveToLocalStorage(storageKey, cacheData), 0);
+        }
       }
     }
   }, []);

@@ -8,42 +8,30 @@ export const galleryService = {
       const response = await api.get('/gallery');
       const data = response.data;
       
-      // Ensure the response data is an array
+      // Fast path for array data
       if (Array.isArray(data)) {
         return data;
-      } else if (data && typeof data === 'object') {
-        // In production, the API might return an object with a data property
-        // that contains the actual array of images
-        console.warn('Gallery API did not return an array, trying to extract array from object:', data);
-        
+      }
+      
+      // Handle non-array responses efficiently
+      if (data && typeof data === 'object') {
         // Try to find an array property in the response
         const possibleArrayProps = ['data', 'images', 'items', 'results'];
-        let foundArray = null;
         
         for (const prop of possibleArrayProps) {
           if (data[prop] && Array.isArray(data[prop])) {
-            console.log(`Found array in data.${prop}`);
-            foundArray = data[prop];
-            break;
+            return data[prop];
           }
         }
         
-        if (foundArray) {
-          return foundArray;
-        } else {
-          // If we can't find an array, try to convert the object to an array if it has gallery-like properties
-          if (data.title && data.category) {
-            console.log('Converting single gallery object to array');
-            return [data];
-          } else {
-            console.error('Could not extract gallery array from data:', data);
-            return []; // Return empty array instead of throwing error
-          }
+        // Single object to array conversion
+        if (data.title && data.category) {
+          return [data];
         }
-      } else {
-        console.error('Gallery API did not return an array or object:', data);
-        return []; // Return empty array instead of throwing error
       }
+      
+      console.warn('Gallery API returned unexpected format:', data);
+      return [];
     } catch (error) {
       console.error('Error fetching gallery images:', error);
       throw error;
