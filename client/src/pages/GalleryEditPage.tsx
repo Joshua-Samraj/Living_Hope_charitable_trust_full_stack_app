@@ -25,7 +25,7 @@ const AdminDashboard: React.FC = () => {
       console.log('Testing API connection...');
       const response = await api.get('/health');
       console.log('API Health Check Success:', response.data);
-      alert('API connection successful!');
+      alert('Data base connection successful!');
     } catch (error) {
       console.error('API Health Check Failed:', error);
       alert('API connection failed! Check console for details.');
@@ -158,7 +158,7 @@ const AdminDashboard: React.FC = () => {
             onClick={testApiConnection}
             className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
           >
-            Test API
+            Database
           </button>
           <button
             onClick={() => navigate('/admin/gallery/upload')}
