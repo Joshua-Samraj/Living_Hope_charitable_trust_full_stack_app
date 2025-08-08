@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 const GalleryUploadPage: React.FC = () => {
@@ -53,7 +53,7 @@ const GalleryUploadPage: React.FC = () => {
       const authConfig = createAuthConfig('multipart/form-data');
       
       // The backend will convert the image to base64 text and store it
-      await axios.post('/api/gallery', formData, authConfig);
+      await api.post('/gallery', formData, authConfig);
       setLoading(false);
       navigate('/admin/dashboard');
     } catch (err) {

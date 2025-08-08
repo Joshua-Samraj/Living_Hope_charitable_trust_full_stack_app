@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import api from '../services/api';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
@@ -18,19 +19,32 @@ const AdminDashboard: React.FC = () => {
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
 
+  // Test API connection function
+  const testApiConnection = async () => {
+    try {
+      console.log('Testing API connection...');
+      const response = await api.get('/health');
+      console.log('API Health Check Success:', response.data);
+      alert('API connection successful!');
+    } catch (error) {
+      console.error('API Health Check Failed:', error);
+      alert('API connection failed! Check console for details.');
+    }
+  };
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
         // Check if user is authenticated
-        
-        
+
+
         // Get auth config with Basic Authentication headers
         const config = createAuthConfig();
-        
+
         // Fetch gallery images with auth headers
-        const { data } = await axios.get<GalleryImage[]>('/api/gallery', config);
+        const { data } = await api.get('/gallery', config);
         console.log('Gallery data:', data);
-        
+
         // Ensure data is an array before setting it
         if (Array.isArray(data)) {
           setImages(data);
@@ -38,11 +52,11 @@ const AdminDashboard: React.FC = () => {
           // In production, the API might return an object with a data property
           // that contains the actual array of images
           console.warn('Gallery data is not an array, trying to extract array from object:', data);
-          
+
           // Try to find an array property in the response
           const possibleArrayProps = ['data', 'images', 'items', 'results'];
           let foundArray = null;
-          
+
           for (const prop of possibleArrayProps) {
             if (data[prop] && Array.isArray(data[prop])) {
               console.log(`Found array in data.${prop}`);
@@ -50,7 +64,7 @@ const AdminDashboard: React.FC = () => {
               break;
             }
           }
-          
+
           if (foundArray) {
             setImages(foundArray);
           } else {
@@ -69,14 +83,14 @@ const AdminDashboard: React.FC = () => {
           setImages([]);
           setError('Invalid data format received from server');
         }
-        
+
         // Initialize expanded state for all categories
         const categories = [...new Set(data.map(img => img.category))];
         const initialExpandedState = categories.reduce((acc, category) => {
           acc[category] = false; // Set to false if you want categories collapsed by default
           return acc;
         }, {} as Record<string, boolean>);
-        
+
         setExpandedCategories(initialExpandedState);
         setLoading(false);
       } catch (err) {
@@ -97,12 +111,12 @@ const AdminDashboard: React.FC = () => {
           navigate('/admin/login');
           return;
         }
-        
+
         // Get auth config with Basic Authentication headers
         const config = createAuthConfig();
-        
+
         // Delete the image with auth headers
-        await axios.delete(`/api/gallery/${id}`, config);
+        await api.delete(`/gallery/${id}`, config);
         setImages(images.filter((image) => image._id !== id));
       } catch (err) {
         setError('Failed to delete image');
@@ -139,12 +153,20 @@ const AdminDashboard: React.FC = () => {
       <h1 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Manage Gallery Images</h2>
-        <button
-          onClick={() => navigate('/admin/gallery/upload')}
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Upload New Image
-        </button>
+        <div className="space-x-2">
+          <button
+            onClick={testApiConnection}
+            className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Test API
+          </button>
+          <button
+            onClick={() => navigate('/admin/gallery/upload')}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Upload New Image
+          </button>
+        </div>
       </div>
 
       {categories.length === 0 ? (
@@ -153,7 +175,7 @@ const AdminDashboard: React.FC = () => {
         <div className="space-y-6">
           {categories.map(category => (
             <div key={category} className="border border-gray-200 rounded-lg overflow-hidden">
-              <div 
+              <div
                 className="bg-gray-100 px-4 py-3 cursor-pointer flex justify-between items-center"
                 onClick={() => toggleCategory(category)}
               >
@@ -162,7 +184,7 @@ const AdminDashboard: React.FC = () => {
                   {expandedCategories[category] ? '−' : '+'}
                 </span>
               </div>
-              
+
               {expandedCategories[category] && (
                 <div className="overflow-x-auto">
                   <table className="min-w-full">
@@ -180,9 +202,9 @@ const AdminDashboard: React.FC = () => {
                         .map((image) => (
                           <tr key={image._id} className="border-t border-gray-200 hover:bg-gray-50">
                             <td className="py-3 px-4">
-                              <img 
-                                src={image.url} 
-                                alt={image.title} 
+                              <img
+                                src={image.url}
+                                alt={image.title}
                                 className="w-20 h-20 object-cover rounded"
                               />
                             </td>

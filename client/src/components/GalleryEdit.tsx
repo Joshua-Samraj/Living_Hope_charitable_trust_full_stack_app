@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
@@ -26,7 +26,7 @@ const GalleryEdit: React.FC = () => {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const { data } = await axios.get<GalleryImage>(`/api/gallery/${id}`);
+        const { data } = await api.get(`/gallery/${id}`);
         console.log('Image data:', data);
         
         // Validate the data received
@@ -70,7 +70,7 @@ const GalleryEdit: React.FC = () => {
       const config = createAuthConfig();
       
       // Update the image with auth headers
-      await axios.put(`/api/gallery/${id}`, formData, config);
+      await api.put(`/gallery/${id}`, formData, config);
       navigate('/admin/gallery/edit'); // Redirect after successful update
     } catch (err) {
       setError('Failed to update image');

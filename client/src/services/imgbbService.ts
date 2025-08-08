@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from './api';
 
 // ImgBB API service for image uploads
 export const imgbbService = {
@@ -10,7 +10,7 @@ export const imgbbService = {
       formData.append('image', imageFile);
       
       // Make API call to backend endpoint that will handle ImgBB upload
-      const response = await axios.post('/api/gallery/imgbb-upload', formData, {
+      const response = await api.post('/gallery/imgbb-upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

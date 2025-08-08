@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
@@ -30,7 +30,7 @@ const AdminDashboard: React.FC = () => {
         const config = createAuthConfig();
         
         // Fetch gallery images with auth headers
-        const { data } = await axios.get<GalleryImage[]>('/api/gallery', config);
+        const { data } = await api.get('/gallery', config);
         setImages(data);
         setLoading(false);
       } catch (err) {
@@ -56,7 +56,7 @@ const AdminDashboard: React.FC = () => {
         const config = createAuthConfig();
         
         // Delete the image with auth headers
-        await axios.delete(`/api/gallery/${id}`, config);
+        await api.delete(`/gallery/${id}`, config);
         setImages(images.filter((image) => image._id !== id));
       } catch (err) {
         setError('Failed to delete image');

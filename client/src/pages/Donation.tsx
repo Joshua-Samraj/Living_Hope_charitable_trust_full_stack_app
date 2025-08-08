@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, CheckCircle, Loader2 } from 'lucide-react';
 
@@ -35,7 +35,7 @@ const DonationForm: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get<Category[]>('https://living-hope-charitable-trust-full-stack.onrender.com/api/categories');
+        const { data } = await api.get('/categories');
         setCategories(data);
       } catch (err) {
         console.error('Failed to fetch categories', err);
@@ -79,7 +79,7 @@ const handleCategoryToggle = (categoryName: string) => {
     }
 
     try {
-      await axios.post('https://living-hope-charitable-trust-full-stack.onrender.com/api/donations', formData);
+      await api.post('/donations', formData);
       setSuccess('Thank you for your donation!');
       // Reset form
       setFormData({
