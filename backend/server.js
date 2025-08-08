@@ -68,7 +68,47 @@ const adminRoutes = require('./routes/adminRoutes')(AdminUser);
 const donationRoutes = require('./routes/donationRoutes');
 const volunteerRoutes = require('./routes/volunteerRoutes');
 
-// Removed conflicting gallery route - handled by galleryRoutes
+// Express.js route handler
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+app.put('/gallery/:id', upload.single('image'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, category, description } = req.body;
+    
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid image ID' });
+    }
+
+    let updateData = { title, category, description };
+    
+    // If new image was uploaded
+    if (req.file) {
+      const imagePath = await processUploadedFile(req.file); // Your file processing function
+      updateData.imageUrl = imagePath;
+      
+      // Optional: Delete old image file
+      // fs.unlinkSync(oldImagePath);
+    }
+
+    const updatedImage = await Gallery.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedImage) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+
+    res.json(updatedImage);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
 // Use Routes
 app.use('/api/projects', projectRoutes);
@@ -91,27 +131,6 @@ app.get('/api/health', (req, res) => {
     uptime: process.uptime(),
     message: 'API server is running properly'
   });
-});
-
-// Test endpoint to verify gallery response format
-app.get('/api/test/gallery-format', async (req, res) => {
-  try {
-    const Gallery = require('./models/Gallery');
-    const images = await Gallery.find({}).limit(1);
-    
-    res.json({
-      message: 'Gallery format test',
-      sampleCount: images.length,
-      isArray: Array.isArray(images),
-      sampleData: images.length > 0 ? images[0] : null,
-      responseType: typeof images
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      message: 'Test failed', 
-      error: error.message 
-    });
-  }
 });
 
 // Error handling middleware

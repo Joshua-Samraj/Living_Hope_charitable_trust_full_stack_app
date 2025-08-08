@@ -8,10 +8,6 @@ export const galleryService = {
       const response = await api.get('/gallery');
       const data = response.data;
       
-      console.log('Gallery API response:', data);
-      console.log('Gallery data type:', typeof data);
-      console.log('Gallery data is array:', Array.isArray(data));
-      
       // Ensure the response data is an array
       if (Array.isArray(data)) {
         return data;
