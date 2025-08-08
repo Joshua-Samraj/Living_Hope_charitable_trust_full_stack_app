@@ -35,7 +35,7 @@ const DonationForm: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data } = await axios.get<Category[]>('/categories');
+        const { data } = await axios.get<Category[]>('/api/categories');
         setCategories(data);
       } catch (err) {
         console.error('Failed to fetch categories', err);
