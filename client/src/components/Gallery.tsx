@@ -18,8 +18,17 @@ const Gallery: React.FC = () => {
       try {
         setLoading(true);
         const images = await galleryService.getAllImages();
-        setGalleryImages(images);
-        setError(null);
+        console.log('Gallery images fetched:', images);
+        
+        // Ensure images is an array
+        if (Array.isArray(images)) {
+          setGalleryImages(images);
+          setError(null);
+        } else {
+          console.error('Gallery service did not return an array:', images);
+          setGalleryImages([]);
+          setError('Invalid gallery data format. Please try again later.');
+        }
       } catch (err) {
         console.error('Error fetching gallery images:', err);
         setError('Failed to load gallery images. Please try again later.');
@@ -31,12 +40,23 @@ const Gallery: React.FC = () => {
     fetchGalleryImages();
   }, []);
 
-  const categories = useMemo(
-    () => ['All', ...Array.from(new Set(galleryImages.map(img => img.category)))],
-    [galleryImages]
-  );
+  const categories = useMemo(() => {
+    // Ensure galleryImages is an array before processing
+    if (!Array.isArray(galleryImages)) {
+      console.error('galleryImages is not an array in categories useMemo:', galleryImages);
+      return ['All'];
+    }
+    
+    return ['All', ...Array.from(new Set(galleryImages.map(img => img.category)))];
+  }, [galleryImages]);
 
   const filteredImages = useMemo(() => {
+    // Ensure galleryImages is an array before processing
+    if (!Array.isArray(galleryImages)) {
+      console.error('galleryImages is not an array:', galleryImages);
+      return [];
+    }
+    
     // Process images to ensure URLs are properly formatted
     const processedImages = galleryImages.map(img => ({
       ...img,

@@ -29,8 +29,46 @@ const AdminDashboard: React.FC = () => {
         
         // Fetch gallery images with auth headers
         const { data } = await axios.get<GalleryImage[]>('/api/gallery', config);
-        console.log(data);
-        setImages(data);
+        console.log('Gallery data:', data);
+        
+        // Ensure data is an array before setting it
+        if (Array.isArray(data)) {
+          setImages(data);
+        } else if (data && typeof data === 'object') {
+          // In production, the API might return an object with a data property
+          // that contains the actual array of images
+          console.warn('Gallery data is not an array, trying to extract array from object:', data);
+          
+          // Try to find an array property in the response
+          const possibleArrayProps = ['data', 'images', 'items', 'results'];
+          let foundArray = null;
+          
+          for (const prop of possibleArrayProps) {
+            if (data[prop] && Array.isArray(data[prop])) {
+              console.log(`Found array in data.${prop}`);
+              foundArray = data[prop];
+              break;
+            }
+          }
+          
+          if (foundArray) {
+            setImages(foundArray);
+          } else {
+            // If we can't find an array, try to convert the object to an array if it has gallery-like properties
+            if (data.title && data.category) {
+              console.log('Converting single gallery object to array');
+              setImages([data]);
+            } else {
+              console.error('Could not extract gallery array from data:', data);
+              setImages([]);
+              setError('Invalid data format received from server');
+            }
+          }
+        } else {
+          console.error('Gallery data is not an array or object:', data);
+          setImages([]);
+          setError('Invalid data format received from server');
+        }
         
         // Initialize expanded state for all categories
         const categories = [...new Set(data.map(img => img.category))];

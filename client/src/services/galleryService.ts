@@ -6,7 +6,44 @@ export const galleryService = {
   getAllImages: async (): Promise<GalleryImage[]> => {
     try {
       const response = await api.get('/gallery');
-      return response.data;
+      const data = response.data;
+      
+      // Ensure the response data is an array
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data && typeof data === 'object') {
+        // In production, the API might return an object with a data property
+        // that contains the actual array of images
+        console.warn('Gallery API did not return an array, trying to extract array from object:', data);
+        
+        // Try to find an array property in the response
+        const possibleArrayProps = ['data', 'images', 'items', 'results'];
+        let foundArray = null;
+        
+        for (const prop of possibleArrayProps) {
+          if (data[prop] && Array.isArray(data[prop])) {
+            console.log(`Found array in data.${prop}`);
+            foundArray = data[prop];
+            break;
+          }
+        }
+        
+        if (foundArray) {
+          return foundArray;
+        } else {
+          // If we can't find an array, try to convert the object to an array if it has gallery-like properties
+          if (data.title && data.category) {
+            console.log('Converting single gallery object to array');
+            return [data];
+          } else {
+            console.error('Could not extract gallery array from data:', data);
+            return []; // Return empty array instead of throwing error
+          }
+        }
+      } else {
+        console.error('Gallery API did not return an array or object:', data);
+        return []; // Return empty array instead of throwing error
+      }
     } catch (error) {
       console.error('Error fetching gallery images:', error);
       throw error;
@@ -17,7 +54,13 @@ export const galleryService = {
   getImagesByCategory: async (category: string): Promise<GalleryImage[]> => {
     try {
       const response = await api.get(`/gallery/category/${category}`);
-      return response.data;
+      // Ensure the response data is an array
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else {
+        console.error(`Gallery API did not return an array for category ${category}:`, response.data);
+        return []; // Return empty array instead of throwing error
+      }
     } catch (error) {
       console.error(`Error fetching gallery images for category ${category}:`, error);
       throw error;

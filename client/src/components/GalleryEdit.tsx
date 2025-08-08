@@ -27,14 +27,23 @@ const GalleryEdit: React.FC = () => {
     const fetchImage = async () => {
       try {
         const { data } = await axios.get<GalleryImage>(`/api/gallery/${id}`);
-        setImage(data);
-        setFormData({
-          title: data.title,
-          category: data.category,
-          description: data.description
-        });
+        console.log('Image data:', data);
+        
+        // Validate the data received
+        if (data && typeof data === 'object' && data.title && data.category) {
+          setImage(data);
+          setFormData({
+            title: data.title,
+            category: data.category,
+            description: data.description || ''
+          });
+        } else {
+          console.error('Invalid image data received:', data);
+          setError('Invalid image data received from server');
+        }
         setLoading(false);
       } catch (err) {
+        console.error('Error fetching image:', err);
         setError('Failed to fetch image');
         setLoading(false);
       }
