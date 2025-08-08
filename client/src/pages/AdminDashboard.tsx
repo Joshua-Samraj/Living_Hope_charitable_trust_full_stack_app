@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useData } from '../contexts/DataContext';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
@@ -12,13 +13,12 @@ interface GalleryImage {
 }
 
 const AdminDashboard: React.FC = () => {
-  const [images, setImages] = useState<GalleryImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { galleryImages, galleryLoading, getGalleryImages, refreshGalleryImages } = useData();
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchImages = async () => {
+    const loadImages = async () => {
       try {
         // Check if user is authenticated
         if (!isAuthenticated()) {
@@ -26,21 +26,14 @@ const AdminDashboard: React.FC = () => {
           return;
         }
         
-        // Get auth config with Basic Authentication headers
-        const config = createAuthConfig();
-        
-        // Fetch gallery images with auth headers
-        const { data } = await api.get('/gallery', config);
-        setImages(data);
-        setLoading(false);
+        await getGalleryImages();
       } catch (err) {
         setError('Failed to fetch images or not authorized');
-        setLoading(false);
         navigate('/admin/login');
       }
     };
-    fetchImages();
-  }, [navigate]);
+    loadImages();
+  }, [getGalleryImages, navigate]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this image?')) {
@@ -57,7 +50,8 @@ const AdminDashboard: React.FC = () => {
         
         // Delete the image with auth headers
         await api.delete(`/gallery/${id}`, config);
-        setImages(images.filter((image) => image._id !== id));
+        // Refresh gallery data after deletion
+        await refreshGalleryImages();
       } catch (err) {
         setError('Failed to delete image');
         console.error(err);
@@ -65,7 +59,7 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (galleryLoading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
 
   return (
@@ -90,7 +84,7 @@ const AdminDashboard: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {images.map((image) => (
+            {galleryImages.map((image) => (
               <tr key={image._id}>
                 <td className="py-2 px-4 border-b">
                   <img src={image.url} alt={image.title} className="w-20 h-20 object-cover" />

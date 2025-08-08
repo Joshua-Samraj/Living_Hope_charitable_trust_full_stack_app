@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useData } from '../contexts/DataContext';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 const GalleryUploadPage: React.FC = () => {
+  const { refreshGalleryImages } = useData();
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
@@ -54,6 +56,10 @@ const GalleryUploadPage: React.FC = () => {
       
       // The backend will convert the image to base64 text and store it
       await api.post('/gallery', formData, authConfig);
+      
+      // Refresh gallery cache after successful upload
+      await refreshGalleryImages();
+      
       setLoading(false);
       navigate('/admin/dashboard');
     } catch (err) {

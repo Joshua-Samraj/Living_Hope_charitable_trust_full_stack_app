@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import api from '../services/api';
+import { useData } from '../contexts/DataContext';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
@@ -13,8 +13,7 @@ interface GalleryImage {
 }
 
 const AdminDashboard: React.FC = () => {
-  const [images, setImages] = useState<GalleryImage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { galleryImages, galleryLoading, getGalleryImages, refreshGalleryImages } = useData();
   const [error, setError] = useState('');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const navigate = useNavigate();
@@ -25,82 +24,62 @@ const AdminDashboard: React.FC = () => {
       console.log('Testing API connection...');
       const response = await api.get('/health');
       console.log('API Health Check Success:', response.data);
-      alert('Data base connection successful!');
+      alert('Database connection successful!');
     } catch (error) {
       console.error('API Health Check Failed:', error);
       alert('API connection failed! Check console for details.');
     }
   };
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        // Check if user is authenticated
-
-
-        // Get auth config with Basic Authentication headers
-        const config = createAuthConfig();
-
-        // Fetch gallery images with auth headers
-        const { data } = await api.get('/gallery', config);
-        console.log('Gallery data:', data);
-
-        // Ensure data is an array before setting it
-        if (Array.isArray(data)) {
-          setImages(data);
-        } else if (data && typeof data === 'object') {
-          // In production, the API might return an object with a data property
-          // that contains the actual array of images
-          console.warn('Gallery data is not an array, trying to extract array from object:', data);
-
-          // Try to find an array property in the response
-          const possibleArrayProps = ['data', 'images', 'items', 'results'];
-          let foundArray = null;
-
-          for (const prop of possibleArrayProps) {
-            if (data[prop] && Array.isArray(data[prop])) {
-              console.log(`Found array in data.${prop}`);
-              foundArray = data[prop];
-              break;
-            }
-          }
-
-          if (foundArray) {
-            setImages(foundArray);
-          } else {
-            // If we can't find an array, try to convert the object to an array if it has gallery-like properties
-            if (data.title && data.category) {
-              console.log('Converting single gallery object to array');
-              setImages([data]);
-            } else {
-              console.error('Could not extract gallery array from data:', data);
-              setImages([]);
-              setError('Invalid data format received from server');
-            }
-          }
-        } else {
-          console.error('Gallery data is not an array or object:', data);
-          setImages([]);
-          setError('Invalid data format received from server');
-        }
-
-        // Initialize expanded state for all categories
-        const categories = [...new Set(data.map(img => img.category))];
+  // Refresh gallery data
+  const handleRefresh = async () => {
+    try {
+      setError('');
+      await refreshGalleryImages();
+      // Re-initialize expanded categories after refresh
+      if (galleryImages.length > 0) {
+        const categories = [...new Set(galleryImages.map((img: GalleryImage) => img.category))];
         const initialExpandedState = categories.reduce((acc, category) => {
-          acc[category] = false; // Set to false if you want categories collapsed by default
+          acc[category] = false;
           return acc;
         }, {} as Record<string, boolean>);
-
         setExpandedCategories(initialExpandedState);
-        setLoading(false);
+      }
+    } catch (err) {
+      console.error('Error refreshing gallery images:', err);
+      setError('Failed to refresh images');
+    }
+  };
+
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        // Check if user is authenticated
+        if (!isAuthenticated()) {
+          navigate('/admin/login');
+          return;
+        }
+
+        const images = await getGalleryImages();
+        
+        // Initialize expanded state for all categories
+        if (images.length > 0) {
+          const categories = [...new Set(images.map((img: GalleryImage) => img.category))];
+          const initialExpandedState = categories.reduce((acc, category) => {
+            acc[category] = false; // Set to false if you want categories collapsed by default
+            return acc;
+          }, {} as Record<string, boolean>);
+
+          setExpandedCategories(initialExpandedState);
+        }
       } catch (err) {
+        console.error('Error loading gallery images:', err);
         setError('Failed to fetch images or not authorized');
-        setLoading(false);
-        // navigate('/admin/login');
       }
     };
-    fetchImages();
-  }, [navigate]);
+
+    loadImages();
+  }, [getGalleryImages, navigate]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this image?')) {
@@ -117,7 +96,9 @@ const AdminDashboard: React.FC = () => {
 
         // Delete the image with auth headers
         await api.delete(`/gallery/${id}`, config);
-        setImages(images.filter((image) => image._id !== id));
+        
+        // Refresh the gallery data after deletion
+        await refreshGalleryImages();
       } catch (err) {
         setError('Failed to delete image');
         console.error(err);
@@ -132,10 +113,10 @@ const AdminDashboard: React.FC = () => {
     }));
   };
 
-  // Get unique categories
-  const categories = [...new Set(images.map(img => img.category))];
+  // Get unique categories from current gallery images
+  const categories = [...new Set(galleryImages.map((img: GalleryImage) => img.category))];
 
-  if (loading) return (
+  if (galleryLoading) return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="flex space-x-2">
         <div className="w-4 h-4 rounded-full bg-blue-500 animate-bounce"></div>
@@ -146,7 +127,17 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
+  if (error) return (
+    <div className="text-center py-10">
+      <div className="text-red-500 mb-4">{error}</div>
+      <button
+        onClick={handleRefresh}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Try Again
+      </button>
+    </div>
+  );
 
   return (
     <div className="container mx-auto p-4">
@@ -161,6 +152,12 @@ const AdminDashboard: React.FC = () => {
             Database
           </button>
           <button
+            onClick={handleRefresh}
+            className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Refresh
+          </button>
+          <button
             onClick={() => navigate('/admin/gallery/upload')}
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           >
@@ -168,6 +165,8 @@ const AdminDashboard: React.FC = () => {
           </button>
         </div>
       </div>
+
+
 
       {categories.length === 0 ? (
         <div className="text-center py-10">No images found. Upload some images to get started.</div>
@@ -197,9 +196,9 @@ const AdminDashboard: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {images
-                        .filter(img => img.category === category)
-                        .map((image) => (
+                      {galleryImages
+                        .filter((img: GalleryImage) => img.category === category)
+                        .map((image: GalleryImage) => (
                           <tr key={image._id} className="border-t border-gray-200 hover:bg-gray-50">
                             <td className="py-3 px-4">
                               <img

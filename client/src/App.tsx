@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { DataProvider } from './contexts/DataContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -22,36 +23,38 @@ import GalleryEdit from './components/GalleryEdit';
 
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
-        <Navbar />
-        <Suspense fallback={<LoadingSpinner />}>
-          <AnimatePresence mode="wait" initial={true}>  
-            <motion.div key="app-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <Scrolltop />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/projects/:category" element={<CategoryProjects />} />
-                <Route path="/donation" element={<Donation />} />
-                <Route path="/volunteer" element={<Volunteer />} />
-                {/* <Route path="/gallery" element={<Gallery />} /> */}
-                <Route path="/gallery" element={<GalleryPage />} />
-                <Route path="/admin/login" element={<AdminLoginPage />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/gallery/upload" element={<GalleryUploadPage />} />
-                <Route path="/admin/gallery/edit" element={<GalleryEditPage />} />
-                <Route path="/admin/gallery/edit/:id" element={<GalleryEdit />} />
+    <DataProvider>
+      <Router>
+        <div className="min-h-screen bg-gray-50">
+          <Navbar />
+          <Suspense fallback={<LoadingSpinner />}>
+            <AnimatePresence mode="wait" initial={true}>
+              <motion.div key="app-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <Scrolltop />
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/projects/:category" element={<CategoryProjects />} />
+                  <Route path="/donation" element={<Donation />} />
+                  <Route path="/volunteer" element={<Volunteer />} />
+                  {/* <Route path="/gallery" element={<Gallery />} /> */}
+                  <Route path="/gallery" element={<GalleryPage />} />
+                  <Route path="/admin/login" element={<AdminLoginPage />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/gallery/upload" element={<GalleryUploadPage />} />
+                  <Route path="/admin/gallery/edit" element={<GalleryEditPage />} />
+                  <Route path="/admin/gallery/edit/:id" element={<GalleryEdit />} />
 
 
-              </Routes>
-              <Footer />
-            </motion.div>
-          </AnimatePresence>
-        </Suspense>
-      </div>
-    </Router>
+                </Routes>
+                <Footer />
+              </motion.div>
+            </AnimatePresence>
+          </Suspense>
+        </div>
+      </Router>
+    </DataProvider>
   );
 }
 

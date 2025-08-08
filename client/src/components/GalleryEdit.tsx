@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useData } from '../contexts/DataContext';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
@@ -14,6 +15,7 @@ interface GalleryImage {
 const GalleryEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { refreshGalleryImages } = useData();
   const [image, setImage] = useState<GalleryImage | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -71,6 +73,10 @@ const GalleryEdit: React.FC = () => {
       
       // Update the image with auth headers
       await api.put(`/gallery/${id}`, formData, config);
+      
+      // Refresh gallery cache after successful update
+      await refreshGalleryImages();
+      
       navigate('/admin/gallery/edit'); // Redirect after successful update
     } catch (err) {
       setError('Failed to update image');

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
+import { useData } from '../contexts/DataContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, CheckCircle, Loader2 } from 'lucide-react';
 
@@ -32,18 +33,20 @@ const DonationForm: React.FC = () => {
     { value: 'yearly', label: 'Yearly' },
   ];
 
+  const { getCategories } = useData();
+
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const { data } = await api.get('/categories');
-        setCategories(data);
+        const categories = await getCategories();
+        setCategories(categories);
       } catch (err) {
         console.error('Failed to fetch categories', err);
         setError('Failed to load donation categories.');
       }
     };
-    fetchCategories();
-  }, []);
+    loadCategories();
+  }, [getCategories]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

@@ -7,43 +7,35 @@ import { Category } from '../data/categories';
 import ProjectCard from '../components/ProjectCard';
 import CategoryCard from '../components/CategoryCard';
 import ProjectModal from '../components/ProjectModal';
-import { projectService } from '../services/projectService';
-import { categoryService } from '../services/categoryService';
+import { useData } from '../contexts/DataContext';
 
 const Projects = () => {
   const navigate = useNavigate();
+  const { projects, categories, projectsLoading, categoriesLoading, getProjects, getCategories } = useData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch projects and categories from API
+  // Load projects and categories using cached data
   useEffect(() => {
-    const fetchData = async () => {
+    const loadData = async () => {
       try {
-        setLoading(true);
-        const [projectsData, categoriesData] = await Promise.all([
-          projectService.getAllProjects(),
-          categoryService.getAllCategories(true)
+        await Promise.all([
+          getProjects(),
+          getCategories()
         ]);
-        setProjects(projectsData);
-        setCategories(categoriesData);
         setError(null);
       } catch (err) {
-        console.error('Error fetching data:', err);
+        console.error('Error loading data:', err);
         setError('Failed to load data. Please try again later.');
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
+    loadData();
+  }, [getProjects, getCategories]);
 
   // Calculate project count for each category
   const categoryProjectCounts = useMemo(() => {
@@ -108,7 +100,7 @@ const Projects = () => {
       className="min-h-screen pt-16 bg-gray-50"
     >
       {/* Loading state */}
-      {loading && (
+      {(projectsLoading || categoriesLoading) && (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-700"></div>
         </div>

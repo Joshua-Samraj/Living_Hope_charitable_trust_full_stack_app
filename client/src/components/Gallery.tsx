@@ -2,42 +2,28 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { GalleryImage } from '../data/galleryData';
 import ImageCard from './ImageCard';
 import ImageViewer from './ImageViewer';
-import { galleryService } from '../services/galleryService';
+import { useData } from '../contexts/DataContext';
 import { base64ToUrl } from '../utils/imageUtils';
 
 const Gallery: React.FC = () => {
+  const { galleryImages, galleryLoading, getGalleryImages } = useData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
-  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch gallery images from API
+  // Load gallery images using cached data
   useEffect(() => {
-    const fetchGalleryImages = async () => {
+    const loadGalleryImages = async () => {
       try {
-        setLoading(true);
-        const images = await galleryService.getAllImages();
-        console.log('Gallery images fetched:', images);
-        
-        // Ensure images is an array
-        if (Array.isArray(images)) {
-          setGalleryImages(images);
-          setError(null);
-        } else {
-          console.error('Gallery service did not return an array:', images);
-          setGalleryImages([]);
-          setError('Invalid gallery data format. Please try again later.');
-        }
+        await getGalleryImages();
+        setError(null);
       } catch (err) {
-        console.error('Error fetching gallery images:', err);
+        console.error('Error loading gallery images:', err);
         setError('Failed to load gallery images. Please try again later.');
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchGalleryImages();
+    loadGalleryImages();
   }, []);
 
   const categories = useMemo(() => {
@@ -86,7 +72,7 @@ const Gallery: React.FC = () => {
       <h1 className="mt-10 text-3xl font-bold text-center mb-8">Trust Activity Gallery</h1>
       
       {/* Loading state */}
-      {loading && (
+      {galleryLoading && (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
         </div>
