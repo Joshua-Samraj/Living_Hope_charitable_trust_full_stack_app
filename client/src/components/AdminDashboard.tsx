@@ -585,6 +585,7 @@ const handleUpdateCategory = async (e: React.FormEvent) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+    
       {/* Donation Details Modal */}
       {showDonationModal && selectedDonation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -651,6 +652,15 @@ const handleUpdateCategory = async (e: React.FormEvent) => {
         <div className="text-center mb-12 pt-10">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
           <p className="text-gray-600">Manage volunteers and gallery images</p>
+          <button
+    onClick={() => {
+      localStorage.clear();
+      navigate('/admin/login');
+    }}
+    className="absolute top-20 right-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+  >
+    Logout
+  </button>
         </div>
         
         {/* Tab Navigation */}
