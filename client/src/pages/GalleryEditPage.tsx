@@ -29,6 +29,7 @@ const AdminDashboard: React.FC = () => {
         
         // Fetch gallery images with auth headers
         const { data } = await axios.get<GalleryImage[]>('/api/gallery', config);
+        console.log(data);
         setImages(data);
         
         // Initialize expanded state for all categories
