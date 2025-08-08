@@ -3,11 +3,13 @@ import { volunteerService } from '../services/volunteerService';
 import { donationService, Donation } from '../services/donationService';
 import { projectService } from '../services/projectService';
 import { categoryService } from '../services/categoryService';
+import { galleryService } from '../services/galleryService';
 import api from '../services/api';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Project } from '../data/projects';
 import { Category } from '../data/categories';
+import { GalleryImage } from '../data/galleryData';
 
 import imageCompression from 'browser-image-compression';
 // Define types for our data
@@ -72,6 +74,9 @@ const AdminDashboard: React.FC = () => {
   const [showDonationModal, setShowDonationModal] = useState<boolean>(false);
   const [projects, setProjects] = useState<Project[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showProjectModal, setShowProjectModal] = useState<boolean>(false);
   const [showAddProjectModal, setShowAddProjectModal] = useState<boolean>(false);
@@ -138,6 +143,10 @@ const AdminDashboard: React.FC = () => {
         
         const categoriesData = await categoryService.getAllCategories(true);
         setCategories(categoriesData);
+        
+        // Fetch gallery images
+        const galleryData = await galleryService.getAllImages();
+        setGalleryImages(galleryData);
         
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -345,6 +354,58 @@ const handleDeleteProject = async (projectId: string) => {
       } catch (err) {
         console.error('Error deleting category:', err);
         setError('Failed to delete category. Please try again.');
+      }
+    }
+  };
+
+  // Handle gallery image selection
+  const handleImageSelection = (imageId: string) => {
+    const newSelected = new Set(selectedImages);
+    if (newSelected.has(imageId)) {
+      newSelected.delete(imageId);
+    } else {
+      newSelected.add(imageId);
+    }
+    setSelectedImages(newSelected);
+  };
+
+  // Handle select all gallery images
+  const handleSelectAllImages = () => {
+    if (selectedImages.size === galleryImages.length) {
+      setSelectedImages(new Set());
+    } else {
+      const allImageIds = galleryImages.map(img => img._id || img.id).filter(Boolean);
+      setSelectedImages(new Set(allImageIds));
+    }
+  };
+
+  // Handle bulk delete gallery images
+  const handleBulkDeleteImages = async () => {
+    if (selectedImages.size === 0) {
+      alert('Please select images to delete');
+      return;
+    }
+
+    const confirmMessage = `Are you sure you want to delete ${selectedImages.size} selected image${selectedImages.size > 1 ? 's' : ''}?`;
+    if (window.confirm(confirmMessage)) {
+      setIsDeleting(true);
+      try {
+        const imageIds = Array.from(selectedImages);
+        const result = await galleryService.deleteMultipleImages(imageIds);
+        
+        // Clear selection
+        setSelectedImages(new Set());
+        
+        // Refresh gallery data
+        const updatedGalleryData = await galleryService.getAllImages();
+        setGalleryImages(updatedGalleryData);
+        
+        alert(result.message);
+      } catch (err: any) {
+        console.error('Error deleting images:', err);
+        setError(err.response?.data?.message || 'Failed to delete images');
+      } finally {
+        setIsDeleting(false);
       }
     }
   };
@@ -828,26 +889,139 @@ const handleUpdateCategory = async (e: React.FormEvent) => {
         
         {/* Gallery Tab Content */}
         {activeTab === 'gallery' && (
-          <div>
+          <div className="bg-white shadow rounded-lg overflow-hidden">
             <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Gallery Images</h3>
-                <p className="mt-1 text-sm text-gray-500">Manage uploaded images</p>
+                <h3 className="text-lg font-medium text-gray-900">Gallery Images ({galleryImages.length})</h3>
+                <p className="mt-1 text-sm text-gray-500">Manage uploaded images with bulk operations</p>
               </div>
               <div className="flex space-x-3">
                 <button
                   onClick={() => navigate('/admin/gallery/upload')}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Upload New Image
+                  Upload Multiple Images
                 </button>
                 <button
                   onClick={() => navigate('/admin/gallery/edit')}
                   className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
-                  Edit Image
+                  Detailed Management
                 </button>
               </div>
+            </div>
+
+            {/* Bulk Actions Bar */}
+            {galleryImages.length > 0 && (
+              <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedImages.size === galleryImages.length && galleryImages.length > 0}
+                        onChange={handleSelectAllImages}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        Select All ({galleryImages.length} images)
+                      </span>
+                    </label>
+                    {selectedImages.size > 0 && (
+                      <span className="text-sm text-blue-600 font-medium">
+                        {selectedImages.size} selected
+                      </span>
+                    )}
+                  </div>
+                  
+                  {selectedImages.size > 0 && (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => setSelectedImages(new Set())}
+                        className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+                      >
+                        Clear Selection
+                      </button>
+                      <button
+                        onClick={handleBulkDeleteImages}
+                        disabled={isDeleting}
+                        className="bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white font-medium py-1 px-3 rounded text-sm"
+                      >
+                        {isDeleting ? 'Deleting...' : `Delete Selected (${selectedImages.size})`}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            <div className="p-6">
+              {galleryImages.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="mx-auto h-12 w-12 text-gray-400">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 48 48" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L32 16m-2-2l1.586-1.586a2 2 0 012.828 0L46 16" />
+                    </svg>
+                  </div>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No Images Found</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Upload multiple images at once with automatic compression.
+                  </p>
+                  <div className="mt-6">
+                    <button
+                      onClick={() => navigate('/admin/gallery/upload')}
+                      className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Upload Your First Images
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {galleryImages.map((image) => {
+                    const imageId = image._id || image.id;
+                    return (
+                      <div 
+                        key={imageId} 
+                        className={`relative group cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
+                          selectedImages.has(imageId) ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        onClick={() => handleImageSelection(imageId)}
+                      >
+                        <div className="aspect-square">
+                          <img
+                            src={image.url}
+                            alt={image.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        
+                        {/* Selection Checkbox */}
+                        <div className="absolute top-2 left-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedImages.has(imageId)}
+                            onChange={(e) => {
+                              e.stopPropagation();
+                              handleImageSelection(imageId);
+                            }}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                        </div>
+                        
+                        {/* Image Info Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-2 transform translate-y-full group-hover:translate-y-0 transition-transform">
+                          <p className="text-xs font-medium truncate">{image.title}</p>
+                          <p className="text-xs text-gray-300 truncate">{image.category}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   const stats = [
-    { icon: Users, label: 'People Helped', value: '20,000+' },
+    { icon: Users, label: 'People Helped', value: '10,000+' },
     { icon: Globe, label: 'Communities Reached', value: '50+' },
-    { icon: Heart, label: 'Projects Completed', value: '20+' },
+    { icon: Heart, label: 'Projects Completed', value: '200+' },
   ];
 
   const scrollToSection = () => {
@@ -86,7 +86,7 @@ const Home = () => {
           >
             <h2 className="text-4xl font-bold text-gray-800 mb-4">Our Impact</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Since our founding in 2021, we've been making a difference in communities across the region
+              Since our founding in 2020, we've been making a difference in communities across the region
             </p>
           </motion.div>
 

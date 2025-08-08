@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useData } from '../contexts/DataContext';
 import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
+import imageCompression from 'browser-image-compression';
 
 const GalleryUploadPage: React.FC = () => {
   const { refreshGalleryImages } = useData();
@@ -12,7 +13,7 @@ const GalleryUploadPage: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [uploadProgress, setUploadProgress] = useState<{current: number, total: number}>({current: 0, total: 0});
+  const [uploadProgress, setUploadProgress] = useState('');
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,8 +24,22 @@ const GalleryUploadPage: React.FC = () => {
     }
   };
 
-  const removeFile = (index: number) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  // Function to compress images on the client side
+  const compressImage = async (file: File): Promise<File> => {
+    const options = {
+      maxSizeMB: 1, // Maximum size in MB
+      maxWidthOrHeight: 1024, // Maximum width or height
+      useWebWorker: true,
+      fileType: 'image/jpeg' as const
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      return compressedFile;
+    } catch (error) {
+      console.error('Error compressing image:', error);
+      return file; // Return original file if compression fails
+    }
   };
 
   // Check if user is authenticated when component mounts
@@ -38,7 +53,7 @@ const GalleryUploadPage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setUploadProgress({current: 0, total: selectedFiles.length});
+    setUploadProgress('');
     
     try {
       // Check if user is authenticated
@@ -50,81 +65,63 @@ const GalleryUploadPage: React.FC = () => {
       }
 
       if (selectedFiles.length === 0) {
-        setError('Please select at least one image to upload');
+        setError('Please select at least one image');
         setLoading(false);
         return;
       }
+      
+      setUploadProgress('Compressing images...');
+      
+      // Compress all selected images
+      const compressedFiles: File[] = [];
+      for (let i = 0; i < selectedFiles.length; i++) {
+        setUploadProgress(`Compressing image ${i + 1} of ${selectedFiles.length}...`);
+        const compressedFile = await compressImage(selectedFiles[i]);
+        compressedFiles.push(compressedFile);
+      }
+      
+      setUploadProgress('Uploading images...');
+      
+      // Create form data with multiple files
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('category', category);
+      formData.append('description', description);
+      
+      // Append all compressed files
+      compressedFiles.forEach((file, index) => {
+        formData.append('files', file);
+      });
 
       // Get auth config with Basic Authentication headers
       const authConfig = createAuthConfig('multipart/form-data');
       
-      // Upload each file separately with the same title, category, and description
-      const uploadPromises = selectedFiles.map(async (file, index) => {
-        try {
-          // Create form data for each file
-          const formData = new FormData();
-          formData.append('title', title);
-          formData.append('category', category);
-          formData.append('description', description);
-          formData.append('file', file);
-
-          // Upload the file
-          await api.post('/gallery', formData, authConfig);
-          
-          // Update progress
-          setUploadProgress(prev => ({...prev, current: prev.current + 1}));
-          
-          return { success: true, fileName: file.name };
-        } catch (error) {
-          console.error(`Failed to upload ${file.name}:`, error);
-          return { success: false, fileName: file.name, error };
-        }
-      });
-
-      // Wait for all uploads to complete
-      const results = await Promise.all(uploadPromises);
+      // Upload all images to the backend
+      const response = await api.post('/gallery', formData, authConfig);
       
-      // Check results
-      const successful = results.filter(r => r.success);
-      const failed = results.filter(r => !r.success);
-      
-      if (failed.length > 0) {
-        setError(`${failed.length} out of ${selectedFiles.length} images failed to upload: ${failed.map(f => f.fileName).join(', ')}`);
-      }
-      
-      if (successful.length > 0) {
-        // Refresh gallery cache after successful uploads
-        await refreshGalleryImages();
-        
-        if (failed.length === 0) {
-          // All uploads successful
-          navigate('/admin/dashboard');
-        }
-      }
+      // Refresh gallery cache after successful upload
+      await refreshGalleryImages();
       
       setLoading(false);
-    } catch (err) {
-      setError('Failed to upload images');
+      setUploadProgress('');
+      
+      // Show success message
+      if (response.data.message) {
+        alert(response.data.message);
+      }
+      
+      navigate('/admin/dashboard');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to upload images');
       setLoading(false);
+      setUploadProgress('');
       console.error(err);
     }
   };
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Upload Gallery Images</h1>
-      
-      {/* Instructions */}
-      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-        <div className="flex">
-          <div className="ml-3">
-            <p className="text-sm text-blue-700">
-              <strong>Multiple Upload:</strong> You can select multiple images at once. All selected images will be uploaded with the same title, category, and description you provide below.
-            </p>
-          </div>
-        </div>
-      </div>
-      
+      <h1 className="text-3xl font-bold mb-6 text-center">Upload New Gallery Image</h1>
       {error && <p className="text-red-500 text-center mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
         <div className="mb-4">
@@ -178,20 +175,15 @@ const GalleryUploadPage: React.FC = () => {
             onChange={handleFileChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-          
           {loading && (
-            <div className="mt-4">
-              <p className="text-blue-500">Uploading images... ({uploadProgress.current}/{uploadProgress.total})</p>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div 
-                  className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
-                  style={{ width: `${(uploadProgress.current / uploadProgress.total) * 100}%` }}
-                ></div>
-              </div>
+            <div className="mt-2">
+              <p className="text-blue-500">Processing images...</p>
+              {uploadProgress && <p className="text-sm text-gray-600">{uploadProgress}</p>}
             </div>
           )}
           
-          {selectedFiles.length > 0 && !loading && (
+          {/* Image Previews */}
+          {selectedFiles.length > 0 && (
             <div className="mt-4">
               <p className="text-sm text-gray-600 mb-2">Selected Images ({selectedFiles.length}):</p>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -202,13 +194,9 @@ const GalleryUploadPage: React.FC = () => {
                       alt={`Preview ${index + 1}`} 
                       className="w-full h-24 object-cover rounded border"
                     />
-                    <button
-                      type="button"
-                      onClick={() => removeFile(index)}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
-                    >
-                      ×
-                    </button>
+                    <div className="absolute top-1 right-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded">
+                      {index + 1}
+                    </div>
                     <p className="text-xs text-gray-500 mt-1 truncate">{file.name}</p>
                   </div>
                 ))}
@@ -219,10 +207,10 @@ const GalleryUploadPage: React.FC = () => {
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50"
             disabled={loading || selectedFiles.length === 0}
           >
-            {loading ? `Uploading... (${uploadProgress.current}/${uploadProgress.total})` : `Upload ${selectedFiles.length} Image${selectedFiles.length !== 1 ? 's' : ''}`}
+            {loading ? 'Processing...' : `Upload ${selectedFiles.length} Image${selectedFiles.length !== 1 ? 's' : ''}`}
           </button>
           <button
             type="button"

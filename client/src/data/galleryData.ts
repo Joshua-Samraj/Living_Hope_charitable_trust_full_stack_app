@@ -1,6 +1,7 @@
 // src/data/galleryData.ts
 export interface GalleryImage {
-  id: string;
+  id?: string;
+  _id?: string;
   category: string;
   title: string;
   url: string;
