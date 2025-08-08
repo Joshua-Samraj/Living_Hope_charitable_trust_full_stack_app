@@ -1,4 +1,5 @@
 import api from './api';
+import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface Donation {
   _id: string;
@@ -14,21 +15,16 @@ interface Donation {
 const donationService = {
   getAllDonations: async (): Promise<Donation[]> => {
     try {
-      const adminData = localStorage.getItem('admin');
-      if (!adminData) {
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
         throw new Error('Authentication required');
       }
-      const admin = JSON.parse(adminData);
-      const token = btoa(JSON.stringify({ id: admin.id }));
       
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      };
+      // Get auth config with Basic Authentication headers
+      const config = createAuthConfig();
       
-      // const response = await api.get('/donations', config);
-      const response = await api.get('/donations');
+      // Fetch donations with auth headers
+      const response = await api.get('/donations', config);
       return response.data;
     } catch (error) {
       console.error('Error fetching donations:', error);

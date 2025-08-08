@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
+import { isAuthenticated } from '../utils/authUtils';
 
 const AdminLoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,15 +11,45 @@ const AdminLoginPage: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Check if already authenticated on component mount
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate('/admin/dashboard');
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/admin/login', { username, password });
-      localStorage.setItem('admin', JSON.stringify(res.data));
-      navigate('/admin/dashboard'); // Redirect to admin dashboard after successful login
-    } catch (err) {
-      setError('Invalid credentials');
-      console.error(err);
+      console.log('Attempting login with username:', username);
+      console.log('API URL being used:', import.meta.env.DEV ? 'Development API' : 'Production API');
+      
+      // Basic authentication approach - send username and password to login endpoint
+      const res = await api.post('/admin/login', { username, password });
+      console.log('Login response:', res.data);
+      
+      // Store admin data with password in localStorage for future authenticated requests
+      const adminDataWithPassword = {
+        ...res.data,
+        password: password // Store password for basic auth
+      };
+      
+      console.log('Storing admin data in localStorage:', { ...adminDataWithPassword, password: '********' });
+      localStorage.setItem('admin', JSON.stringify(adminDataWithPassword));
+      
+      // Verify the data was stored correctly
+      const storedData = localStorage.getItem('admin');
+      console.log('Stored admin data exists:', !!storedData);
+      
+      // Redirect to admin dashboard after successful login
+      navigate('/admin/dashboard');
+    } catch (err: any) {
+      // Display more specific error message if available
+      const errorMessage = err.response?.data?.message || 'Invalid credentials';
+      console.error('Login error:', err);
+      console.error('Error response:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setError(errorMessage);
     }
   };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
   _id: string;
@@ -19,13 +20,16 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const adminData = true;
-        if (!adminData) {
+        // Check if user is authenticated
+        if (!isAuthenticated()) {
           navigate('/admin/login');
           return;
         }
-        // No token needed for basic auth, assuming backend handles session/basic auth
-        const config = {};
+        
+        // Get auth config with Basic Authentication headers
+        const config = createAuthConfig();
+        
+        // Fetch gallery images with auth headers
         const { data } = await axios.get<GalleryImage[]>('/api/gallery', config);
         setImages(data);
         setLoading(false);
@@ -41,22 +45,17 @@ const AdminDashboard: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this image?')) {
       try {
-        // Get admin data from localStorage for authentication
-        const adminData = localStorage.getItem('admin');
-        if (!adminData) {
+        // Check if user is authenticated
+        if (!isAuthenticated()) {
           setError('You must be logged in to delete images');
+          navigate('/admin/login');
           return;
         }
         
-        // Parse admin data and create authorization header
-        const admin = JSON.parse(adminData);
-        const token = btoa(JSON.stringify({ id: admin.id }));
+        // Get auth config with Basic Authentication headers
+        const config = createAuthConfig();
         
-        const config = {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        };
+        // Delete the image with auth headers
         await axios.delete(`/api/gallery/${id}`, config);
         setImages(images.filter((image) => image._id !== id));
       } catch (err) {

@@ -1,4 +1,5 @@
 import api from './api';
+import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 export interface Volunteer {
   _id?: string;
@@ -30,25 +31,16 @@ export const volunteerService = {
   // Get all volunteers (admin only)
   getAllVolunteers: async (): Promise<Volunteer[]> => {
     try {
-      // Get admin data from localStorage for authentication
-      const adminData = localStorage.getItem('admin');
-      if (!adminData) {
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
         throw new Error('Authentication required');
       }
-      console.log("Login", adminData)
       
-      // Parse admin data and create authorization header
-      const admin = JSON.parse(adminData);
-      const token = btoa(JSON.stringify({ id: admin.id }));
+      // Get auth config with Basic Authentication headers
+      const config = createAuthConfig();
       
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      };
-      
-      // const response = await api.get('/volunteers', config);
-      const response = await api.get('/volunteers');
+      // Fetch volunteers with auth headers
+      const response = await api.get('/volunteers', config);
       return response.data;
     } catch (error) {
       console.error('Error fetching volunteers:', error);
@@ -59,21 +51,16 @@ export const volunteerService = {
   // Get volunteer statistics (admin only)
   getVolunteerStats: async (): Promise<any> => {
     try {
-      const adminData = localStorage.getItem('admin');
-      if (!adminData) {
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
         throw new Error('Authentication required');
       }
-      const admin = JSON.parse(adminData);
-      const token = btoa(JSON.stringify({ id: admin.id }));
       
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      };
+      // Get auth config with Basic Authentication headers
+      const config = createAuthConfig();
       
-      // const response = await api.get('/volunteers/stats', config);
-      const response = await api.get('/volunteers/stats');
+      // Fetch volunteer stats with auth headers
+      const response = await api.get('/volunteers/stats', config);
       return response.data;
     } catch (error) {
       console.error('Error fetching volunteer stats:', error);
@@ -82,8 +69,22 @@ export const volunteerService = {
   },
 
   deleteVolunteer: async (id: string) => {
-  const response = await api.delete(`/volunteers/${id}`);
-  return response.data;
-},
+    try {
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
+        throw new Error('Authentication required');
+      }
+      
+      // Get auth config with Basic Authentication headers
+      const config = createAuthConfig();
+      
+      // Delete volunteer with auth headers
+      const response = await api.delete(`/volunteers/${id}`, config);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting volunteer:', error);
+      throw error;
+    }
+  },
 };
 

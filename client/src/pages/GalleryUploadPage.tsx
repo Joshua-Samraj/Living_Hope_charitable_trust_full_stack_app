@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 const GalleryUploadPage: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -18,23 +19,27 @@ const GalleryUploadPage: React.FC = () => {
     }
   };
 
+  // Check if user is authenticated when component mounts
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      navigate('/admin/login');
+    }
+  }, [navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      // Get admin data from localStorage for authentication
-      const adminData = localStorage.getItem('admin');
-      if (!adminData) {
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
         setError('You must be logged in to upload images');
         setLoading(false);
+        navigate('/admin/login');
         return;
       }
       
-      // Parse admin data and create authorization header
-      const admin = JSON.parse(adminData);
-      const token = btoa(JSON.stringify({ id: admin.id }));
-      
+      // Create form data
       const formData = new FormData();
       formData.append('title', title);
       formData.append('category', category);
@@ -43,16 +48,12 @@ const GalleryUploadPage: React.FC = () => {
         formData.append('file', selectedFile);
       }
 
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        },
-      };
+      // Get auth config with Basic Authentication headers
+      // Override Content-Type for multipart/form-data
+      const authConfig = createAuthConfig('multipart/form-data');
       
       // The backend will convert the image to base64 text and store it
-      // No changes needed here as the backend handles the conversion
-      await axios.post('/api/gallery', formData, config);
+      await axios.post('/api/gallery', formData, authConfig);
       setLoading(false);
       navigate('/admin/dashboard');
     } catch (err) {

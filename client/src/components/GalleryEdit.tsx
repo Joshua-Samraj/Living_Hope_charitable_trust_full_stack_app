@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { isAuthenticated, createAuthConfig } from '../utils/authUtils';
 
 interface GalleryImage {
   _id: string;
@@ -49,21 +50,17 @@ const GalleryEdit: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const adminData = localStorage.getItem('admin');
-      if (!adminData) {
+      // Check if user is authenticated
+      if (!isAuthenticated()) {
         setError('You must be logged in to edit images');
+        navigate('/admin/login');
         return;
       }
       
-      const admin = JSON.parse(adminData);
-      const token = btoa(JSON.stringify({ id: admin.id }));
+      // Get auth config with Basic Authentication headers
+      const config = createAuthConfig();
       
-      const config = {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      };
-      
+      // Update the image with auth headers
       await axios.put(`/api/gallery/${id}`, formData, config);
       navigate('/admin/gallery/edit'); // Redirect after successful update
     } catch (err) {
