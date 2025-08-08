@@ -28,7 +28,7 @@ const AdminDashboard: React.FC = () => {
         const config = createAuthConfig();
         
         // Fetch gallery images with auth headers
-        const { data } = await axios.get<GalleryImage[]>('/gallery', config);
+        const { data } = await axios.get<GalleryImage[]>('/api/gallery', config);
         console.log(data);
         setImages(data);
         
@@ -64,7 +64,7 @@ const AdminDashboard: React.FC = () => {
         const config = createAuthConfig();
         
         // Delete the image with auth headers
-        await axios.delete(`/gallery/${id}`, config);
+        await axios.delete(`/api/gallery/${id}`, config);
         setImages(images.filter((image) => image._id !== id));
       } catch (err) {
         setError('Failed to delete image');
