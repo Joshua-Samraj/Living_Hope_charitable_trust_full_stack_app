@@ -724,29 +724,21 @@ const handleUpdateCategory = async (e: React.FormEvent) => {
                   <p className="text-3xl font-bold text-gray-900">{volunteerStats.totalVolunteers}</p>
                 </div>
                 
-                <div className="bg-white rounded-lg shadow p-6">
+                {/* <div className="bg-white rounded-lg shadow p-6">
                   <h3 className="text-gray-500 text-sm font-medium mb-2">Recent Registrations</h3>
                   <p className="text-3xl font-bold text-gray-900">{volunteerStats.recentRegistrations}</p>
                   <p className="text-sm text-gray-500 mt-1">Last 30 days</p>
-                </div>
+                </div> */}
                 
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-gray-500 text-sm font-medium mb-2">Top Location</h3>
-                  <p className="text-3xl font-bold text-gray-900">
-                    {volunteerStats.locationBreakdown[0]?._id || 'N/A'}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {volunteerStats.locationBreakdown[0]?.count || 0} volunteers
-                  </p>
-                </div>
                 
-                <div className="bg-white rounded-lg shadow p-6">
+                
+                {/* <div className="bg-white rounded-lg shadow p-6">
                   <h3 className="text-gray-500 text-sm font-medium mb-2">Monthly Growth</h3>
                   <p className="text-3xl font-bold text-gray-900">
                     {volunteerStats.monthlyTrends[volunteerStats.monthlyTrends.length - 1]?.count || 0}
                   </p>
                   <p className="text-sm text-gray-500 mt-1">This month</p>
-                </div>
+                </div> */}
               </div>
             )}
             

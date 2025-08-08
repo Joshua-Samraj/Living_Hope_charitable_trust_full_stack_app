@@ -22,10 +22,7 @@ const AdminDashboard: React.FC = () => {
     const fetchImages = async () => {
       try {
         // Check if user is authenticated
-        if (!isAuthenticated()) {
-          navigate('/admin/login');
-          return;
-        }
+        
         
         // Get auth config with Basic Authentication headers
         const config = createAuthConfig();
@@ -46,7 +43,7 @@ const AdminDashboard: React.FC = () => {
       } catch (err) {
         setError('Failed to fetch images or not authorized');
         setLoading(false);
-        navigate('/admin/login');
+        // navigate('/admin/login');
       }
     };
     fetchImages();

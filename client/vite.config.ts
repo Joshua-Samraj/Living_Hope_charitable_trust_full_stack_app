@@ -27,9 +27,10 @@ return {
       // Configure proxy for API requests during development
       proxy: {
         '/api': {
-          target: 'http://localhost:5000',
+          target: 'https://living-hope-charitable-trust-full-stack.onrender.com/api',
           changeOrigin: true,
           secure: false,
+          rewrite: (path) => path.replace(/^\/api/, '')
         },
       },
     },
