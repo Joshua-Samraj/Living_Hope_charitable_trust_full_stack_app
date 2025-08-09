@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: Living Hope Trust
+    env: node
+    rootDir: .  # Root of the whole repo
+    buildCommand: |
+      cd client
+      npm install
+      npm run build
+      cd ../server
+      npm install
+    startCommand: node server/server.js  # or server/app.js depending on your entry

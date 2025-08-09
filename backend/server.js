@@ -1,0 +1,172 @@
+const dotenv = require('dotenv');
+dotenv.config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+// Initialize cache system
+const cacheManager = require('./services/CacheManager');
+
+// Import middleware
+const errorHandler = require('./middleware/errorHandler');
+const notFound = require('./middleware/notFound');
+
+// Import routes
+const projectRoutes = require('./routes/projectRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const galleryRoutes = require('./routes/galleryRoutes');
+const cacheRoutes = require('./routes/cacheRoutes');
+
+const app = express();
+
+// Middleware
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+
+// Configure CORS for both development and production
+const allowedOrigins = [
+  'https://living-hope-charitable-trust-full-s.vercel.app',
+  'https://living-hope-charitable-trust.vercel.app',
+  'https://living-hope-charitable-trust-full-stack-joshua-samrajs-projects.vercel.app', // Add your actual Vercel production URL
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5174' // Add additional local development port
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Log the origin for debugging
+    console.log('Request origin:', origin);
+    console.log('Allowed origins:', allowedOrigins);
+
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) {
+      console.log('No origin, allowing request');
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      console.log('CORS error:', msg, 'Origin:', origin);
+      return callback(new Error(msg), false);
+    }
+    console.log('Origin allowed:', origin);
+    return callback(null, true);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Serve static files from the 'image/projects/gallery' directory
+app.use('/image/projects/gallery', express.static('image/projects/gallery'));
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    console.log('✅ Memory caching ready with node-cache');
+  })
+  .catch(err => console.error('Could not connect to MongoDB', err));
+
+// Import Routes
+const AdminUser = require('./models/AdminUser');
+const adminRoutes = require('./routes/adminRoutes')(AdminUser);
+const donationRoutes = require('./routes/donationRoutes');
+const volunteerRoutes = require('./routes/volunteerRoutes');
+
+// Express.js route handler
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
+app.put('/gallery/:id', upload.single('image'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, category, description } = req.body;
+
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid image ID' });
+    }
+
+    let updateData = { title, category, description };
+
+    // If new image was uploaded
+    if (req.file) {
+      const imagePath = await processUploadedFile(req.file); // Your file processing function
+      updateData.imageUrl = imagePath;
+
+      // Optional: Delete old image file
+      // fs.unlinkSync(oldImagePath);
+    }
+
+    const updatedImage = await Gallery.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedImage) {
+      return res.status(404).json({ message: 'Image not found' });
+    }
+
+    res.json(updatedImage);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Use Routes
+app.use('/api/projects', projectRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/gallery', galleryRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/donations', donationRoutes);
+app.use('/api/volunteers', volunteerRoutes);
+app.use('/api/cache', cacheRoutes);
+
+// Basic route for testing
+app.get('/', (req, res) => {
+  res.send('Living Hope Trust API is running');
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    message: 'API server is running properly'
+  });
+});
+
+// Error handling middleware
+app.use(notFound);
+app.use(errorHandler);
+
+// Start server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, async () => {
+  console.log(`Server running on port ${PORT}`);
+
+  // Warm cache on startup with essential data
+  setTimeout(async () => {
+    try {
+      const Project = require('./models/Project');
+      const Category = require('./models/Category');
+      const Gallery = require('./models/Gallery');
+
+      const dataLoaders = {
+        projects: () => Project.find(),
+        categories: () => Category.find(),
+        gallery: () => Gallery.find()
+      };
+
+      await cacheManager.warmCache(dataLoaders);
+      console.log('Initial cache warming completed');
+    } catch (error) {
+      console.warn('Initial cache warming failed:', error.message);
+    }
+  }, 2000); // Wait 2 seconds after server start
+});

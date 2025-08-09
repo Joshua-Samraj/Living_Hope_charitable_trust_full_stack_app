@@ -1,0 +1,97 @@
+{
+  "hash": "c843adf6",
+  "configHash": "71aae4be",
+  "lockfileHash": "4593f5bf",
+  "browserHash": "55bdcece",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "238cb779",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "bedd3b84",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "25fe2138",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "02a4acd1",
+      "needsInterop": false
+    },
+    "framer-motion": {
+      "src": "../../node_modules/framer-motion/dist/es/index.mjs",
+      "file": "framer-motion.js",
+      "fileHash": "87ef8481",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "2bc80576",
+      "needsInterop": false
+    },
+    "browser-image-compression": {
+      "src": "../../node_modules/browser-image-compression/dist/browser-image-compression.mjs",
+      "file": "browser-image-compression.js",
+      "fileHash": "497feef3",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "dd3f9ba8",
+      "needsInterop": false
+    },
+    "@react-three/fiber": {
+      "src": "../../node_modules/@react-three/fiber/dist/react-three-fiber.esm.js",
+      "file": "@react-three_fiber.js",
+      "fileHash": "5d3c232c",
+      "needsInterop": false
+    },
+    "@react-three/drei": {
+      "src": "../../node_modules/@react-three/drei/index.js",
+      "file": "@react-three_drei.js",
+      "fileHash": "072c3458",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-RR7GHOYC": {
+      "file": "chunk-RR7GHOYC.js"
+    },
+    "hls-UB7LY6I3": {
+      "file": "hls-UB7LY6I3.js"
+    },
+    "chunk-JUFZVYWM": {
+      "file": "chunk-JUFZVYWM.js"
+    },
+    "vision_bundle-3QUMERFG": {
+      "file": "vision_bundle-3QUMERFG.js"
+    },
+    "chunk-FRJ3JFGW": {
+      "file": "chunk-FRJ3JFGW.js"
+    },
+    "chunk-TNTPHDQH": {
+      "file": "chunk-TNTPHDQH.js"
+    },
+    "chunk-J3GJSMK3": {
+      "file": "chunk-J3GJSMK3.js"
+    },
+    "chunk-32E4H3EV": {
+      "file": "chunk-32E4H3EV.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
