@@ -1,48 +1,15 @@
-name: Keep Backend Alive with CSV Logging
+name: Keep Backend Alive
 
 on:
   schedule:
-    - cron: "*/1 * * * *"  # Every 10 minutes
-  workflow_dispatch:  # Allow manual trigger
+    - cron: "*/1 * * * *" # Every 10 minutes
+  workflow_dispatch: # Allow manual trigger
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Required for Git history
-
-      - name: Setup CSV file
+      - name: Ping Render backend
         run: |
-          CSV_FILE="ping_log.csv"
-          if [ ! -f "$CSV_FILE" ]; then
-            echo "timestamp,http_status,response_time_ms,url" > "$CSV_FILE"
-          fi
-
-      - name: Ping backend and log results
-        run: |
-          CSV_FILE="ping_log.csv"
-          URL="https://living-hope-charitable-trust-full-stack.onrender.com"
-          
-          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          START_TIME=$(date +%s.%N)
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
-          END_TIME=$(date +%s.%N)
-          RESPONSE_TIME_MS=$(echo "scale=2; ($END_TIME - $START_TIME)*1000" | bc)
-          
-          echo "$TIMESTAMP,$HTTP_CODE,$RESPONSE_TIME_MS,$URL" >> "$CSV_FILE"
-          echo "✅ Ping recorded: $TIMESTAMP | Status: $HTTP_CODE | Response Time: $RESPONSE_TIME_MS ms"
-
-      - name: Commit and push CSV updates
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          
-          git add ping_log.csv
-          git diff-index --quiet HEAD || git commit -m "📈 Update ping log [skip ci]"
-          
-          # Use GitHub token for authentication
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-          git push origin HEAD:${{ github.ref }}
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://living-hope-charitable-trust-full-stack.onrender.com)
+          echo "Response status: $STATUS_CODE"
