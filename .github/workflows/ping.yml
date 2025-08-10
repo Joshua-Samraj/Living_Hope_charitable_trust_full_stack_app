@@ -1,9 +1,9 @@
-name: Keep Backend Alive with Logging
+name: Keep Backend Alive with CSV Logging
 
 on:
   schedule:
-    - cron: "*/10 * * * *" # Every 10 minutes
-  workflow_dispatch: # Allow manual trigger
+    - cron: "*/10 * * * *"  # Every 10 minutes
+  workflow_dispatch:  # Allow manual trigger
 
 jobs:
   ping:
@@ -11,48 +11,44 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Download previous ping data
-        uses: actions/download-artifact@v3
         with:
-          name: ping-history
-          path: artifacts
-        continue-on-error: true # Important for first run when no artifact exists
+          fetch-depth: 0  # Needed for git history
 
-      - name: Ping site and log results
+      - name: Setup CSV file
         run: |
-          # Create artifacts directory if it doesn't exist
-          mkdir -p artifacts
+          CSV_FILE="ping_log.csv"
           
-          # Set the log file path
-          LOG_FILE="artifacts/ping_history.csv"
-          
-          # Create CSV header if file doesn't exist
-          if [ ! -f "$LOG_FILE" ]; then
-            echo "timestamp,http_status,response_time_ms" > "$LOG_FILE"
+          # Create CSV with headers if it doesn't exist
+          if [ ! -f "$CSV_FILE" ]; then
+            echo "timestamp,http_status,response_time_ms,url" > "$CSV_FILE"
           fi
+
+      - name: Ping backend and log results
+        run: |
+          CSV_FILE="ping_log.csv"
+          URL="https://living-hope-charitable-trust-full-stack.onrender.com"
           
-          # Make the request and capture results
+          # Get current timestamp in ISO format
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          START_TIME=$(date +%s.%N)
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://living-hope-charitable-trust-full-stack.onrender.com)
-          END_TIME=$(date +%s.%N)
           
-          # Calculate response time in milliseconds
+          # Measure response time
+          START_TIME=$(date +%s.%N)
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          END_TIME=$(date +%s.%N)
           RESPONSE_TIME_MS=$(echo "scale=2; ($END_TIME - $START_TIME)*1000" | bc)
           
           # Append results to CSV
-          echo "$TIMESTAMP,$HTTP_CODE,$RESPONSE_TIME_MS" >> "$LOG_FILE"
+          echo "$TIMESTAMP,$HTTP_CODE,$RESPONSE_TIME_MS,$URL" >> "$CSV_FILE"
           
-          # Print results for the workflow log
-          echo "Ping results:"
-          echo "Timestamp: $TIMESTAMP"
-          echo "HTTP Status: $HTTP_CODE"
-          echo "Response Time: $RESPONSE_TIME_MS ms"
+          # Print results to workflow log
+          echo "Logged ping results:"
+          cat "$CSV_FILE" | tail -n 1
 
-      - name: Upload ping history
-        uses: actions/upload-artifact@v3
-        with:
-          name: ping-history
-          path: artifacts/ping_history.csv
-          retention-days: 90
+      - name: Commit and push CSV updates
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          git add ping_log.csv
+          git diff-index --quiet HEAD || git commit -m "Update ping log [skip ci]"
+          git push
