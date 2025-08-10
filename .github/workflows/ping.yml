@@ -1,4 +1,4 @@
-name: Keep Backend Alive
+name: Keep Backend Alive with Logging
 
 on:
   schedule:
@@ -9,6 +9,50 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping site
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download previous ping data
+        uses: actions/download-artifact@v3
+        with:
+          name: ping-history
+          path: artifacts
+        continue-on-error: true # Important for first run when no artifact exists
+
+      - name: Ping site and log results
         run: |
-          curl -s -o /dev/null -w "%{http_code}\n" https://living-hope-charitable-trust-full-stack.onrender.com 
+          # Create artifacts directory if it doesn't exist
+          mkdir -p artifacts
+          
+          # Set the log file path
+          LOG_FILE="artifacts/ping_history.csv"
+          
+          # Create CSV header if file doesn't exist
+          if [ ! -f "$LOG_FILE" ]; then
+            echo "timestamp,http_status,response_time_ms" > "$LOG_FILE"
+          fi
+          
+          # Make the request and capture results
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          START_TIME=$(date +%s.%N)
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://living-hope-charitable-trust-full-stack.onrender.com)
+          END_TIME=$(date +%s.%N)
+          
+          # Calculate response time in milliseconds
+          RESPONSE_TIME_MS=$(echo "scale=2; ($END_TIME - $START_TIME)*1000" | bc)
+          
+          # Append results to CSV
+          echo "$TIMESTAMP,$HTTP_CODE,$RESPONSE_TIME_MS" >> "$LOG_FILE"
+          
+          # Print results for the workflow log
+          echo "Ping results:"
+          echo "Timestamp: $TIMESTAMP"
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response Time: $RESPONSE_TIME_MS ms"
+
+      - name: Upload ping history
+        uses: actions/upload-artifact@v3
+        with:
+          name: ping-history
+          path: artifacts/ping_history.csv
+          retention-days: 90
