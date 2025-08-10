@@ -12,13 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Needed for git history
+          fetch-depth: 0  # Required for Git history
 
       - name: Setup CSV file
         run: |
           CSV_FILE="ping_log.csv"
-          
-          # Create CSV with headers if it doesn't exist
           if [ ! -f "$CSV_FILE" ]; then
             echo "timestamp,http_status,response_time_ms,url" > "$CSV_FILE"
           fi
@@ -28,21 +26,14 @@ jobs:
           CSV_FILE="ping_log.csv"
           URL="https://living-hope-charitable-trust-full-stack.onrender.com"
           
-          # Get current timestamp in ISO format
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          
-          # Measure response time
           START_TIME=$(date +%s.%N)
           HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
           END_TIME=$(date +%s.%N)
           RESPONSE_TIME_MS=$(echo "scale=2; ($END_TIME - $START_TIME)*1000" | bc)
           
-          # Append results to CSV
           echo "$TIMESTAMP,$HTTP_CODE,$RESPONSE_TIME_MS,$URL" >> "$CSV_FILE"
-          
-          # Print results to workflow log
-          echo "Logged ping results:"
-          cat "$CSV_FILE" | tail -n 1
+          echo "✅ Ping recorded: $TIMESTAMP | Status: $HTTP_CODE | Response Time: $RESPONSE_TIME_MS ms"
 
       - name: Commit and push CSV updates
         run: |
@@ -50,5 +41,8 @@ jobs:
           git config --global user.email "actions@github.com"
           
           git add ping_log.csv
-          git diff-index --quiet HEAD || git commit -m "Update ping log [skip ci]"
-          git push
+          git diff-index --quiet HEAD || git commit -m "📈 Update ping log [skip ci]"
+          
+          # Use GitHub token for authentication
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+          git push origin HEAD:${{ github.ref }}
