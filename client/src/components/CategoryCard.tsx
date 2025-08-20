@@ -39,9 +39,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, onClick, projectC
   </p>
 
   <div className="flex items-center justify-between">
-    <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
+    {/* <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
       {projectCount} {projectCount === 1 ? 'Project' : 'Projects'}
-    </span>
+    </span> */}
 
     <motion.div
       className="flex items-center gap-2 text-sm font-medium"
